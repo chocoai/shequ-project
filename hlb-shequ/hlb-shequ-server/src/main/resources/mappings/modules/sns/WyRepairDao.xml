@@ -1,0 +1,187 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.haolinbang.modules.sns.dao.WyRepairDao">
+
+	<sql id="wyRepairColumns">
+		a.id AS "id",
+		a.repairtype AS "repairtype",
+		a.applyname AS	"applyname",
+		a.phone AS "phone",
+		a.content AS "content",
+		a.contentdetail AS "contentdetail",
+		a.imgurl AS "imgurl",
+		a.appointmenttime AS "appointmenttime",
+		a.proc_ins_id,
+		a.memberid AS "memberid",
+		a.repairstatus AS "repairstatus",
+		a.createtime AS	"createtime",
+		a.updatetime AS "updatetime",
+		a.roomId AS "roomId",
+		a.group_id AS "groupId",
+		a.source AS "source",
+		a.wyid AS "wyid"
+	</sql>
+
+	<sql id="wyRepairJoins">
+	</sql>
+
+	<select id="get" resultType="WyRepair">
+		SELECT
+		<include refid="wyRepairColumns" />
+		FROM wy_repair a
+		<include refid="wyRepairJoins" />
+		WHERE a.id = #{id}
+	</select>
+
+	<select id="findList" resultType="WyRepair">
+		SELECT
+		<include refid="wyRepairColumns" />
+		FROM wy_repair a
+		<include refid="wyRepairJoins" />
+		<where>
+
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+
+	<select id="findAllList" resultType="WyRepair">
+		SELECT
+		<include refid="wyRepairColumns" />
+		FROM wy_repair a
+		<include refid="wyRepairJoins" />
+		<where>
+
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+
+	<insert id="insert" useGeneratedKeys="true" keyProperty="id">
+		INSERT INTO wy_repair(
+			repairtype,
+			applyname,
+			phone,
+			content,
+			contentdetail,
+			imgurl,
+			appointmenttime,
+			memberid,
+			repairstatus,
+			createtime,
+			updatetime,
+			roomId,
+			group_id,
+			source,
+			wyid
+		) VALUES (
+			#{repairtype},
+			#{applyname},
+			#{phone},
+			#{content},
+			#{contentdetail},
+			#{imgurl},
+			#{appointmenttime},
+			#{memberid},
+			#{repairstatus},
+			#{createtime},
+			#{updatetime},
+			#{roomId},
+			#{groupId},
+			#{source},
+			#{wyid}
+		)
+	</insert>
+
+	<update id="update">
+		UPDATE wy_repair SET
+			repairtype = #{repairtype},
+			applyname = #{applyname},
+			phone = #{phone},
+			content = #{content},
+			contentdetail = #{contentdetail},
+			imgurl = #{imgurl},
+			appointmenttime =
+			#{appointmenttime},
+			memberid = #{memberid},
+			repairstatus =
+			#{repairstatus},
+			createtime = #{createtime},
+			updatetime = #{updatetime},
+			roomId = #{roomId},
+			proc_ins_id = #{procInsId},
+			group_id = #{groupId},
+			source = #{source},
+			wyid = #{wyid}
+		WHERE id = #{id}
+	</update>
+
+	<update id="delete">
+		DELETE FROM wy_repair
+		WHERE id = #{id}
+	</update>
+
+	<update id="updateInsId">
+		UPDATE wy_repair SET
+			proc_ins_id = #{procInsId},
+			updatetime = #{updatetime}
+		WHERE id = #{id}
+	</update>
+
+	<select id="getRepairsByProcInsIds" resultType="WyRepair">
+		SELECT
+		<include refid="wyRepairColumns" />
+		FROM wy_repair a
+		<include refid="wyRepairJoins" />
+		WHERE a.memberid = #{memberId}
+		AND a.proc_ins_id IN
+		<foreach item="item" index="index" collection="procInsIdList" open="("
+			separator="," close=")">
+			#{item}
+		</foreach>
+
+	</select>
+
+	<select id="getWyRepairByMemberId" resultType="WyRepair">
+		SELECT
+		<include refid="wyRepairColumns" />
+		FROM wy_repair a
+		<include refid="wyRepairJoins" />
+		WHERE a.memberId = #{memberId} 
+		ORDER BY a.updatetime DESC
+	</select>
+	
+	<select id="getRepairsByProcInsIds2" resultType="WyRepair">
+		SELECT
+		<include refid="wyRepairColumns" />
+		FROM wy_repair a
+		<include refid="wyRepairJoins" />
+		WHERE a.proc_ins_id IN
+		<foreach item="item" index="index" collection="procInsIdList" open="("
+			separator="," close=")">
+			#{item}
+		</foreach>
+	</select>
+	
+	<update id="upateAppointmentTime">
+		UPDATE wy_repair SET
+		appointmenttime = #{appointmentDate}
+		WHERE id = #{bizId}
+	</update>
+	
+	<update id="updateRepairstatus">
+		UPDATE wy_repair SET
+		repairstatus = #{repairstatus}
+		WHERE proc_ins_id = #{procInsId}
+	</update>
+</mapper>

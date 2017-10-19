@@ -1,0 +1,128 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.haolinbang.modules.sns.dao.WyBizFormDao">
+    
+	<sql id="wyBizFormColumns">
+		a.id AS "id",
+		a.form_id AS "formId",
+		a.form_name AS "formName",
+		a.form_type AS "formType",
+		a.form_url AS "formUrl",
+		a.create_by AS "createBy.id",
+		a.create_date AS "createDate",
+		a.update_by AS "updateBy.id",
+		a.update_date AS "updateDate",
+		a.remarks AS "remarks",
+		a.del_flag AS "delFlag",
+		a.form_html AS "formHtml",
+		a.code AS "code"
+	</sql>
+	
+	<sql id="wyBizFormJoins">
+	</sql>
+    
+	<select id="get" resultType="WyBizForm">
+		SELECT 
+			<include refid="wyBizFormColumns"/>
+		FROM wy_biz_form a
+		<include refid="wyBizFormJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="WyBizForm">
+		SELECT 
+			<include refid="wyBizFormColumns"/>
+		FROM wy_biz_form a
+		<include refid="wyBizFormJoins"/>
+		<where>			
+			a.del_flag = #{DEL_FLAG_NORMAL}
+			<if test="formType !=null and formType !=''">
+				AND a.form_type = #{formType}
+			</if>
+			<if test="formName !=null and formType !=''">
+				AND a.form_name = #{formName}
+			</if>
+			<if test="formId !=null and formType !=''">
+				AND a.form_id = #{formId}
+			</if>
+		</where>
+			ORDER BY a.code asc
+	</select>
+	
+	<select id="findAllList" resultType="WyBizForm">
+		SELECT 
+			<include refid="wyBizFormColumns"/>
+		FROM wy_biz_form a
+		<include refid="wyBizFormJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert" useGeneratedKeys="true" keyProperty="id">
+		INSERT INTO wy_biz_form(
+			form_id,
+			form_name,
+			form_type,
+			form_url,
+			create_by,
+			create_date,
+			update_by,
+			update_date,
+			remarks,
+			del_flag,
+			form_html,
+			code
+		) VALUES (
+			#{formId},
+			#{formName},
+			#{formType},
+			#{formUrl},
+			#{createBy.id},
+			#{createDate},
+			#{updateBy.id},
+			#{updateDate},
+			#{remarks},
+			#{delFlag},
+			#{formHtml},
+			#{code}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE wy_biz_form SET 	
+			form_id = #{formId},
+			form_name = #{formName},
+			form_type = #{formType},
+			form_url = #{formUrl},
+			update_by = #{updateBy.id},
+			update_date = #{updateDate},
+			remarks = #{remarks},
+			form_html = #{formHtml},
+			code = #{code}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="delete">
+		UPDATE wy_biz_form SET 
+			del_flag = #{DEL_FLAG_DELETE}
+		WHERE id = #{id}
+	</update>
+
+	<select id="getWyBizFormListByType" resultType="WyBizForm">
+		SELECT 
+			<include refid="wyBizFormColumns"/>
+		FROM wy_biz_form a
+		<include refid="wyBizFormJoins"/>
+		WHERE a.form_type = #{type}
+	</select>
+	
+</mapper>

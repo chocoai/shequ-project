@@ -1,0 +1,198 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.haolinbang.modules.weixin.dao.WxMessageDao">
+    
+	<sql id="wxMessageColumns">
+		a.id AS "id",
+		a.to_user_name AS "toUserName",
+		a.from_user_name AS "fromUserName",
+		a.content AS "content",
+		a.create_time AS "createTime",
+		a.create_by AS "createBy.id",
+		a.msg_type AS "msgType",
+		a.create_date AS "createDate",
+		a.update_by AS "updateBy.id",
+		a.msg_id AS "msgId",
+		a.update_date AS "updateDate",
+		a.pic_url AS "picUrl",
+		a.remarks AS "remarks",
+		a.mediaid AS "mediaid",
+		a.del_flag AS "delFlag",
+		a.format AS "format",
+		a.thumb_media_id AS "thumbMediaId",
+		a.location_x AS "locationX",
+		a.location_y AS "locationY",
+		a.scale AS "scale",
+		a.label AS "label",
+		a.title AS "title",
+		a.description AS "description",
+		a.url AS "url",
+		a.event AS "event",
+		a.eventkey AS "eventkey",
+		a.ticket AS "ticket",
+		a.latitude AS "latitude",
+		a.longitude AS "longitude",
+		a.pos_precision AS "precision",
+		a.recognition AS "recognition"
+	</sql>
+	
+	<sql id="wxMessageJoins">
+	</sql>
+    
+	<select id="get" resultType="WxMessage">
+		SELECT 
+			<include refid="wxMessageColumns"/>
+		FROM wx_message a
+		<include refid="wxMessageJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="WxMessage">
+		SELECT 
+			<include refid="wxMessageColumns"/>
+		FROM wx_message a
+		<include refid="wxMessageJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+			<if test="title != null and title != ''">
+				AND a.title LIKE 
+					<if test="dbName == 'oracle'">'%'||#{title}||'%'</if>
+					<if test="dbName == 'mssql'">'%'+#{title}+'%'</if>
+					<if test="dbName == 'mysql'">concat('%',#{title},'%')</if>
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="WxMessage">
+		SELECT 
+			<include refid="wxMessageColumns"/>
+		FROM wx_message a
+		<include refid="wxMessageJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO wx_message(
+			id,
+			to_user_name,
+			from_user_name,
+			content,
+			create_time,
+			create_by,
+			msg_type,
+			create_date,
+			update_by,
+			msg_id,
+			update_date,
+			pic_url,
+			remarks,
+			mediaid,
+			del_flag,
+			format,
+			thumb_media_id,
+			location_x,
+			location_y,
+			scale,
+			label,
+			title,
+			description,
+			url,
+			event,
+			eventkey,
+			ticket,
+			latitude,
+			longitude,
+			pos_precision,
+			recognition
+		) VALUES (
+			#{id},
+			#{toUserName},
+			#{fromUserName},
+			#{content},
+			#{createTime},
+			#{createBy.id},
+			#{msgType},
+			#{createDate},
+			#{updateBy.id},
+			#{msgId},
+			#{updateDate},
+			#{picUrl},
+			#{remarks},
+			#{mediaid},
+			#{delFlag},
+			#{format},
+			#{thumbMediaId},
+			#{locationX},
+			#{locationY},
+			#{scale},
+			#{label},
+			#{title},
+			#{description},
+			#{url},
+			#{event},
+			#{eventkey},
+			#{ticket},
+			#{latitude},
+			#{longitude},
+			#{precision},
+			#{recognition}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE wx_message SET 	
+			to_user_name = #{toUserName},
+			from_user_name = #{fromUserName},
+			content = #{content},
+			create_time = #{createTime},
+			msg_type = #{msgType},
+			update_by = #{updateBy.id},
+			msg_id = #{msgId},
+			update_date = #{updateDate},
+			pic_url = #{picUrl},
+			remarks = #{remarks},
+			mediaid = #{mediaid},
+			format = #{format},
+			thumb_media_id = #{thumbMediaId},
+			location_x = #{locationX},
+			location_y = #{locationY},
+			scale = #{scale},
+			label = #{label},
+			title = #{title},
+			description = #{description},
+			url = #{url},
+			event = #{event},
+			eventkey = #{eventkey},
+			ticket = #{ticket},
+			latitude = #{latitude},
+			longitude = #{longitude},
+			pos_precision = #{precision},
+			recognition = #{recognition}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="delete">
+		UPDATE wx_message SET 
+			del_flag = #{DEL_FLAG_DELETE}
+		WHERE id = #{id}
+	</update>
+	
+</mapper>

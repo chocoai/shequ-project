@@ -1,0 +1,128 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.haolinbang.modules.sys.dao.AppLogDao">
+    
+	<sql id="appLogColumns">
+		a.id AS "id",
+		a.type AS "type",
+		a.title AS "title",
+		a.create_by AS "createBy.id",
+		a.create_date AS "createDate",
+		a.remote_addr AS "remoteAddr",
+		a.user_agent AS "userAgent",
+		a.request_uri AS "requestUri",
+		a.method AS "method",
+		a.params AS "params",
+		a.exception AS "exception"
+	</sql>
+	
+	<sql id="appLogJoins">
+	</sql>
+    
+	<select id="get" resultType="AppLog">
+		SELECT 
+			<include refid="appLogColumns"/>
+		FROM app_log a
+		<include refid="appLogJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="AppLog">
+		SELECT 
+			<include refid="appLogColumns"/>
+		FROM app_log a
+		<include refid="appLogJoins"/>
+		<where>
+			
+			<if test="type != null and type != ''">
+				AND a.type = #{type}
+			</if>
+			<if test="title != null and title != ''">
+				AND a.title LIKE 
+					<if test="dbName == 'oracle'">'%'||#{title}||'%'</if>
+					<if test="dbName == 'mssql'">'%'+#{title}+'%'</if>
+					<if test="dbName == 'mysql'">concat('%',#{title},'%')</if>
+			</if>
+			<if test="createBy != null and createBy.id != null and createBy.id != ''">
+				AND a.create_by = #{createBy.id}
+			</if>
+			<if test="createDate != null and createDate != ''">
+				AND a.create_date = #{createDate}
+			</if>
+			<if test="requestUri != null and requestUri != ''">
+				AND a.request_uri = #{requestUri}
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="AppLog">
+		SELECT 
+			<include refid="appLogColumns"/>
+		FROM app_log a
+		<include refid="appLogJoins"/>
+		<where>
+			
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO app_log(
+			id,
+			type,
+			title,
+			create_by,
+			create_date,
+			remote_addr,
+			user_agent,
+			request_uri,
+			method,
+			params,
+			exception
+		) VALUES (
+			#{id},
+			#{type},
+			#{title},
+			#{createBy.id},
+			#{createDate},
+			#{remoteAddr},
+			#{userAgent},
+			#{requestUri},
+			#{method},
+			#{params},
+			#{exception}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE app_log SET 	
+			type = #{type},
+			title = #{title},
+			remote_addr = #{remoteAddr},
+			user_agent = #{userAgent},
+			request_uri = #{requestUri},
+			method = #{method},
+			params = #{params},
+			exception = #{exception}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="delete">
+		DELETE FROM app_log
+		WHERE id = #{id}
+	</update>
+	
+</mapper>

@@ -1,0 +1,134 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.haolinbang.modules.sns.dao.WyComplainDao">
+    
+	<sql id="wyComplainColumns">
+		a.id AS "id",
+		a.complain_area AS "complainArea",
+		a.phone AS "phone",
+		a.content AS "content",
+		a.contentdetail AS "contentdetail",
+		a.imgurl AS "imgurl",
+		a.memberid AS "memberid",
+		a.createtime AS "createtime",
+		a.updatetime AS "updatetime",
+		a.proc_ins_id AS "procInsId",
+		a.roomid AS "roomid",
+		a.applyname AS "applyname",
+		m.member_id AS "member.memberId",
+		m.member_name AS "member.memberName",
+		m.mobile AS "member.mobile"
+	</sql>
+	
+	<sql id="wyComplainJoins">
+		left join wy_member m on m.member_id = a.memberid 
+	</sql>
+    
+	<select id="get" resultType="WyComplain">
+		SELECT 
+			<include refid="wyComplainColumns"/>
+		FROM wy_complain a
+		<include refid="wyComplainJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="WyComplain">
+		SELECT 
+			<include refid="wyComplainColumns"/>
+		FROM wy_complain a
+		<include refid="wyComplainJoins"/>
+		<where>
+			1=1
+			<if test="applyname !=null and applyname !=''">
+				AND a.applyname LIKE CONCAT('%',#{applyname},'%')
+			</if>
+			<if test="content !=null and content !=''">
+				AND a.content LIKE CONCAT('%',#{content},'%')
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="WyComplain">
+		SELECT 
+			<include refid="wyComplainColumns"/>
+		FROM wy_complain a
+		<include refid="wyComplainJoins"/>
+		<where>
+			1=1
+			<if test="applyname !=null and applyname !=''">
+				AND a.applyname LIKE CONCAT('%',#{applyname},'%')
+			</if>
+			<if test="content !=null and content !=''">
+				AND a.content LIKE CONCAT('%',#{content},'%')
+			</if>
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO wy_complain(
+			id,
+			complain_area,
+			phone,
+			content,
+			contentdetail,
+			imgurl,
+			memberid,
+			createtime,
+			updatetime,
+			proc_ins_id,
+			roomid,
+			applyname
+		) VALUES (
+			#{id},
+			#{complainArea},
+			#{phone},
+			#{content},
+			#{contentdetail},
+			#{imgurl},
+			#{memberid},
+			#{createtime},
+			#{updatetime},
+			#{procInsId},
+			#{roomid},
+			#{applyname}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE wy_complain SET 	
+			id = #{id},
+			complain_area = #{complainArea},
+			phone = #{phone},
+			content = #{content},
+			contentdetail = #{contentdetail},
+			imgurl = #{imgurl},
+			memberid = #{memberid},
+			createtime = #{createtime},
+			updatetime = #{updatetime},
+			proc_ins_id = #{procInsId},
+			roomid = #{roomid},
+			applyname = #{applyname}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="delete">
+		DELETE FROM wy_complain
+		WHERE id = #{id}
+	</update>
+	
+</mapper>

@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.haolinbang.modules.sns.dao.UrlmapDao">
+	<select id="getUrlmap" resultType="com.haolinbang.common.thridwy.haolong.bean.bean.Urlmap">
+		select urlkey,urlname,urlstring,secretkey,soapactionstring,status,id
+		from
+		wy_aibei_urlkey
+		<trim prefix="WHERE" suffixOverrides="AND">
+			<if test="urlkey != null">
+				urlkey = #{urlkey,jdbcType=VARCHAR} AND
+			</if>
+			<if test="urlstring != null">
+				urlstring = #{urlstring,jdbcType=VARCHAR} AND
+			</if>
+			<if test="soapactionstring != null">
+				soapactionstring = #{soapactionstring,jdbcType=VARCHAR}
+				AND
+			</if>
+			<if test="secretkey != null">
+				secretkey = #{secretkey,jdbcType=VARCHAR}
+				AND
+			</if>
+			<if test="status != null">
+				status = #{status,jdbcType=VARCHAR} AND
+			</if>
+		</trim>
+	</select>
+	
+	<select id="getUrlmap1" resultType="com.haolinbang.common.thridwy.haolong.bean.bean.Urlmap">
+		select urlkey,urlname,urlstring,secretkey,soapactionstring,status,id
+		from
+		wy_aibei_urlkey
+		<trim prefix="WHERE" suffixOverrides="AND">
+			<if test="urlkey != null">
+				urlkey = #{urlkey,jdbcType=VARCHAR} AND
+			</if>
+			<if test="urlstring != null">
+				urlstring = #{urlstring,jdbcType=VARCHAR} AND
+			</if>
+			<if test="soapactionstring != null">
+				soapactionstring = #{soapactionstring,jdbcType=VARCHAR}
+				AND
+			</if>
+			<if test="secretkey != null">
+				secretkey = #{secretkey,jdbcType=VARCHAR}
+				AND
+			</if>
+			<if test="status != null">
+				status = #{status,jdbcType=VARCHAR} AND
+			</if>
+		</trim>
+	</select>
+	
+    <select id="getUrlmapBySource" resultType="com.haolinbang.common.thridwy.haolong.bean.bean.Urlmap">
+		SELECT
+			urlkey,
+			urlname,
+			urlstring,
+			secretkey,
+			soapactionstring,
+			STATUS,
+			id
+		FROM
+			wy_aibei_urlkey a
+		<where>		
+			a.status = '1'
+			<if test="source !=null and source !=''">
+				AND a.urlkey = #{source}
+			</if>			
+		</where>		
+		<if test="source ==null or source ==''">
+			LIMIT 0,1
+		</if>
+	</select>
+	
+	
+</mapper>

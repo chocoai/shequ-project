@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.haolinbang.modules.sns.dao.AdDao">
+    
+	<select id="findList" resultType="com.haolinbang.modules.sns.entity.Ad">
+		select id,descr,imgSrc,href,updatetime,createtime,status,WYID,source
+		from
+		wy_aibei_ad
+		<trim prefix="WHERE" suffixOverrides="AND">
+			<if test="id != null">
+				id = #{id,jdbcType=VARCHAR} and
+			</if>
+			<if test="descr != null">
+				descr = #{descr,jdbcType=VARCHAR} and
+			</if>
+			<if test="imgSrc != null">
+				imgSrc = #{imgSrc,jdbcType=VARCHAR} and
+			</if>
+			<if test="href != null">
+				href = #{href,jdbcType=VARCHAR} and
+			</if>
+			<if test="createtime != null">
+				createtime = #{createtime,jdbcType=VARCHAR} and
+			</if>
+			<if test="updatetime != null">
+				updatetime = #{updatetime,jdbcType=VARCHAR} and
+			</if>
+			<if test="status != null">
+				status = #{status,jdbcType=VARCHAR}
+			</if>
+			<!-- <if test="WYID != null"> WYID = #{WYID,jdbcType=VARCHAR} AND </if> 
+				<if test="source != null"> source = #{source,jdbcType=VARCHAR} AND </if> -->
+		</trim>
+		AND (WYID = #{WYID,jdbcType=VARCHAR} OR WYID= "") AND (source =
+		#{source,jdbcType=VARCHAR} OR source="")
+	</select>
+</mapper>

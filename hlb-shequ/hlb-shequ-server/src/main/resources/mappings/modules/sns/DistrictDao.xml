@@ -1,0 +1,133 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.haolinbang.modules.sns.dao.DistrictDao">
+    
+	<select id="get" resultType="District">
+		select
+			* 
+		from wy_district 
+		where districtId = #{districtId}
+	</select>
+	
+	<select id="findList" resultType="District">
+		select 
+			* 
+		from wy_district 
+		<trim prefix="WHERE" suffixOverrides="AND">
+			<if test="districtId != null and districtId != ''">
+				districtId = #{districtId} 
+			</if>
+			<if test="province != null and province != ''">
+				and province = #{province} 
+			</if>
+			<if test="city != null and city != ''">
+				and city = #{city}
+			</if>
+			<if test="district != null and district != ''">
+				and district = #{district}
+			</if>
+			<if test="areacode != null and areacode != ''">
+				and areacode = #{areacode} 
+			</if>
+			<if test="postcode != null and postcode != ''">
+				and postcode = #{postcode} 
+			</if>
+		</trim>
+		order by createtime desc
+	</select>
+	
+	<select id="findAllList" resultType="District">
+		select 
+			* 
+		from wy_district 
+		order by createtime desc
+	</select>
+	
+	<insert id="insert">
+		insert into wy_district
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="districtId != null">
+				districtId, 
+			</if>
+			<if test="province != null">
+				province, 
+			</if>
+			<if test="city != null">
+				city,
+			</if>
+			<if test="district != null"> 
+				district, 
+			</if>
+			<if test="areacode != null">
+				areacode, 
+			</if>
+			<if test="postcode != null">
+				postcode, 
+			</if>
+			<if test="createtime != null">
+				createtime, 
+			</if>
+		</trim>		
+		<trim prefix="VALUES (" suffix=")" suffixOverrides=",">
+			<if test="districtId != null">
+				#{districtId},  
+			</if>
+			<if test="province != null">
+				#{province}, 
+			</if>
+			<if test="city != null">
+				#{city},
+			</if>
+			<if test="district != null"> 
+				#{district}, 
+			</if>
+			<if test="areacode != null">
+				#{areacode}, 
+			</if>
+			<if test="postcode != null">
+				#{postcode},  
+			</if>
+			<if test="createtime != null">
+				#{createtime} 
+			</if>
+		</trim>		
+	</insert>
+	
+	<update id="update">
+		update wy_district 
+		<set>
+			<if test="districtId != null"> 
+				districtId = #{districtId},
+			</if>
+			<if test="province != null">
+				province = #{province}, 
+			</if>
+			<if test="city != null">
+				city = #{city}, 
+			</if>
+			<if test="district != null">
+				district = #{district},
+			</if>
+			<if test="areacode != null">
+				areacode = #{areacode}, 
+			</if>
+			<if test="postcode != null">
+				postcode = #{postcode},
+			</if>
+			<if test="createtime != null">
+				createtime = #{createtime}, 
+			</if>
+		</set>
+		where districtId = #{districtId}
+	</update>
+	
+	<update id="delete">
+		delete from wy_district
+		<trim prefix="WHERE" suffixOverrides="AND">
+			<if test="id != null">
+				id = #{id}
+			</if>
+		</trim>
+	</update>
+	
+</mapper>

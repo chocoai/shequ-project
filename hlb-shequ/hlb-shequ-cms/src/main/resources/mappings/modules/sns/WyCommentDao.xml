@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.haolinbang.modules.sns.dao.WyCommentDao">
+    
+	<sql id="wyCommentColumns">
+		a.id AS "id",
+		a.biz_type AS "bizType",
+		a.relation_id AS "relationId",
+		a.publisher AS "publisher",
+		a.publisher_relation AS "publisherRelation",
+		a.be_reply AS "beReply",
+		a.comment AS "comment",
+		a.create_date AS "createDate",
+		a.update_date AS "updateDate",
+		a.audit AS "audit",
+		pub.member_id AS "publisherMember.memberId",
+		pub.member_name AS "publisherMember.memberName",
+		re.member_id AS "relationMember.memberId",
+		re.member_name AS "relationMember.memberName"
+	</sql>
+	
+	<sql id="wyCommentJoins">
+		left join wy_member pub on pub.member_id=a.publisher
+		left join wy_member re on re.member_id=a.publisher_relation
+	</sql>
+    
+	<select id="get" resultType="WyComment">
+		SELECT 
+			<include refid="wyCommentColumns"/>
+		FROM wy_comment a
+		<include refid="wyCommentJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="WyComment">
+		SELECT 
+			<include refid="wyCommentColumns"/>
+		FROM wy_comment a
+		<include refid="wyCommentJoins"/>
+		<where>			
+			<if test="bizType != null and bizType != ''">
+				AND a.biz_type = #{bizType}
+			</if>
+			<if test="publisherMember != null and publisherMember.memberName !=null and publisherMember.memberName != ''">
+				AND pub.member_name LIKE CONCAT('%',#{publisherMember.memberName},'%')
+			</if>			
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="WyComment">
+		SELECT 
+			<include refid="wyCommentColumns"/>
+		FROM wy_comment a
+		<include refid="wyCommentJoins"/>
+		<where>
+			
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO wy_comment(
+			biz_type,
+			relation_id,
+			publisher,
+			publisher_relation,
+			be_reply,
+			comment,
+			create_date,
+			update_date,
+			audit
+		) VALUES (
+			#{bizType},
+			#{relationId},
+			#{publisher},
+			#{publisherRelation},
+			#{beReply},
+			#{comment},
+			#{createDate},
+			#{updateDate},
+			#{audit}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE wy_comment SET 	
+			biz_type = #{bizType},
+			relation_id = #{relationId},
+			publisher = #{publisher},
+			publisher_relation = #{publisherRelation},
+			be_reply = #{beReply},
+			comment = #{comment},
+			update_date = #{updateDate},
+			audit = #{audit}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="delete">
+		DELETE FROM wy_comment
+		WHERE id = #{id}
+	</update>
+	
+	<update id="audit">
+		UPDATE wy_comment SET audit =1
+		WHERE id = #{id}
+	</update>
+	
+</mapper>

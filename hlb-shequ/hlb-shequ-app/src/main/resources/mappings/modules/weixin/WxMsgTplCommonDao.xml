@@ -1,0 +1,194 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.haolinbang.modules.weixin.dao.WxMsgTplCommonDao">
+    
+	<sql id="wxMsgTplCommonColumns">
+		a.id AS "id",
+		a.code AS "code",
+		a.name AS "name",
+		a.first_name AS "firstName",
+		a.first_field AS "firstField",
+		a.first_color AS "firstColor",
+		a.keyword1_name AS "keyword1Name",
+		a.keyword1_field AS "keyword1Field",
+		a.keyword1_color AS "keyword1Color",
+		a.keyword2_name AS "keyword2Name",
+		a.keyword2_field AS "keyword2Field",
+		a.keyword2_color AS "keyword2Color",
+		a.keyword3_name AS "keyword3Name",
+		a.keyword3_field AS "keyword3Field",
+		a.keyword3_color AS "keyword3Color",
+		a.keyword4_name AS "keyword4Name",
+		a.keyword4_field AS "keyword4Field",
+		a.keyword4_color AS "keyword4Color",
+		a.keyword5_name AS "keyword5Name",
+		a.keyword5_field AS "keyword5Field",
+		a.keyword5_color AS "keyword5Color",
+		a.remark_name AS "remarkName",
+		a.remark_field AS "remarkField",
+		a.remark_color AS "remarkColor",
+		a.create_by AS "createBy.id",
+		a.create_date AS "createDate",
+		a.update_by AS "updateBy.id",
+		a.update_date AS "updateDate",
+		a.remarks AS "remarks",
+		a.del_flag AS "delFlag"
+	</sql>
+	
+	<sql id="wxMsgTplCommonJoins">
+	</sql>
+    
+	<select id="get" resultType="WxMsgTplCommon">
+		SELECT 
+			<include refid="wxMsgTplCommonColumns"/>
+		FROM wx_msg_tpl_common a
+		<include refid="wxMsgTplCommonJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="WxMsgTplCommon">
+		SELECT 
+			<include refid="wxMsgTplCommonColumns"/>
+		FROM wx_msg_tpl_common a
+		<include refid="wxMsgTplCommonJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+			<if test="name != null and name != ''">
+				AND a.name LIKE 
+					<if test="dbName == 'oracle'">'%'||#{name}||'%'</if>
+					<if test="dbName == 'mssql'">'%'+#{name}+'%'</if>
+					<if test="dbName == 'mysql'">concat('%',#{name},'%')</if>
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.code ASC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="WxMsgTplCommon">
+		SELECT 
+			<include refid="wxMsgTplCommonColumns"/>
+		FROM wx_msg_tpl_common a
+		<include refid="wxMsgTplCommonJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.code ASC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO wx_msg_tpl_common(
+			id,
+			code,
+			name,
+			first_name,
+			first_field,
+			first_color,
+			keyword1_name,
+			keyword1_field,
+			keyword1_color,
+			keyword2_name,
+			keyword2_field,
+			keyword2_color,
+			keyword3_name,
+			keyword3_field,
+			keyword3_color,
+			keyword4_name,
+			keyword4_field,
+			keyword4_color,
+			keyword5_name,
+			keyword5_field,
+			keyword5_color,
+			remark_name,
+			remark_field,
+			remark_color,
+			create_by,
+			create_date,
+			update_by,
+			update_date,
+			remarks,
+			del_flag
+		) VALUES (
+			#{id},
+			#{code},
+			#{name},
+			#{firstName},
+			#{firstField},
+			#{firstColor},
+			#{keyword1Name},
+			#{keyword1Field},
+			#{keyword1Color},
+			#{keyword2Name},
+			#{keyword2Field},
+			#{keyword2Color},
+			#{keyword3Name},
+			#{keyword3Field},
+			#{keyword3Color},
+			#{keyword4Name},
+			#{keyword4Field},
+			#{keyword4Color},
+			#{keyword5Name},
+			#{keyword5Field},
+			#{keyword5Color},
+			#{remarkName},
+			#{remarkField},
+			#{remarkColor},
+			#{createBy.id},
+			#{createDate},
+			#{updateBy.id},
+			#{updateDate},
+			#{remarks},
+			#{delFlag}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE wx_msg_tpl_common SET 	
+			code = #{code},
+			name = #{name},
+			first_name = #{firstName},
+			first_field = #{firstField},
+			first_color = #{firstColor},
+			keyword1_name = #{keyword1Name},
+			keyword1_field = #{keyword1Field},
+			keyword1_color = #{keyword1Color},
+			keyword2_name = #{keyword2Name},
+			keyword2_field = #{keyword2Field},
+			keyword2_color = #{keyword2Color},
+			keyword3_name = #{keyword3Name},
+			keyword3_field = #{keyword3Field},
+			keyword3_color = #{keyword3Color},
+			keyword4_name = #{keyword4Name},
+			keyword4_field = #{keyword4Field},
+			keyword4_color = #{keyword4Color},
+			keyword5_name = #{keyword5Name},
+			keyword5_field = #{keyword5Field},
+			keyword5_color = #{keyword5Color},
+			remark_name = #{remarkName},
+			remark_field = #{remarkField},
+			remark_color = #{remarkColor},
+			update_by = #{updateBy.id},
+			update_date = #{updateDate},
+			remarks = #{remarks}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="delete">
+		UPDATE wx_msg_tpl_common SET 
+			del_flag = #{DEL_FLAG_DELETE}
+		WHERE id = #{id}
+	</update>
+	
+</mapper>

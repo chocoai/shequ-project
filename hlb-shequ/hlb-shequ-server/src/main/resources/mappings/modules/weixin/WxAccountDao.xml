@@ -1,0 +1,180 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.haolinbang.modules.weixin.dao.WxAccountDao">
+    
+	<sql id="wxAccountColumns">
+		a.id AS "id",
+		a.user_id AS "user.id",
+		a.wxname AS "wxname",
+		a.appid AS "appid",
+		a.appsecret AS "appsecret",
+		a.origin_id AS "originId",
+		a.wxnum AS "wxnum",
+		a.logo AS "logo",
+		a.token AS "token",
+		a.area_id AS "area.id",
+		a.qq AS "qq",
+		a.wxfans AS "wxfans",
+		a.type_id AS "typeId",
+		a.create_by AS "createBy.id",
+		a.create_date AS "createDate",
+		a.update_by AS "updateBy.id",
+		a.update_date AS "updateDate",
+		a.is_default AS "isDefault",
+		a.encoding_aes_key AS "encodingAesKey",
+		a.source AS "source",
+		a.wyid AS "wyid",
+		a.group_id AS "groupId"
+	</sql>
+	
+	<sql id="wxAccountJoins">
+		LEFT JOIN sys_user u2 ON u2.id = a.user_id
+		LEFT JOIN sys_area a10 ON a10.id = a.area_id
+	</sql>
+    
+	<select id="get" resultType="WxAccount">
+		SELECT 
+			<include refid="wxAccountColumns"/>
+		FROM wx_account a
+		<include refid="wxAccountJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="WxAccount">
+		SELECT 
+			<include refid="wxAccountColumns"/>
+		FROM wx_account a
+		<include refid="wxAccountJoins"/>
+		<where>
+			a.source = #{source} and a.group_id = #{groupId} 
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="WxAccount">
+		SELECT 
+			<include refid="wxAccountColumns"/>
+		FROM wx_account a
+		<include refid="wxAccountJoins"/>
+		<where>
+			
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO wx_account(
+			id,
+			user_id,
+			wxname,
+			appid,
+			appsecret,
+			origin_id,
+			wxnum,
+			logo,
+			token,
+			area_id,
+			qq,
+			wxfans,
+			type_id,
+			create_by,
+			create_date,
+			update_by,
+			update_date,
+			is_default,
+			encoding_aes_key,
+			source,
+			wyid,
+			group_id
+		) VALUES (
+			#{id},
+			#{user.id},
+			#{wxname},
+			#{appid},
+			#{appsecret},
+			#{originId},
+			#{wxnum},
+			#{logo},
+			#{token},
+			#{area.id},
+			#{qq},
+			#{wxfans},
+			#{typeId},
+			#{createBy.id},
+			#{createDate},
+			#{updateBy.id},
+			#{updateDate},
+			#{isDefault},
+			#{encodingAesKey},
+			#{source},
+			#{wyid},
+			#{groupId}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE wx_account SET 	
+			user_id = #{user.id},
+			wxname = #{wxname},
+			appid = #{appid},
+			appsecret = #{appsecret},
+			origin_id = #{originId},
+			wxnum = #{wxnum},
+			logo = #{logo},
+			token = #{token},
+			area_id = #{area.id},
+			qq = #{qq},
+			wxfans = #{wxfans},
+			type_id = #{typeId},
+			update_by = #{updateBy.id},
+			update_date = #{updateDate},
+			is_default = #{isDefault},
+			encoding_aes_key = #{encodingAesKey},
+			source = #{source},
+			wyid = #{wyid},
+			group_id = #{groupId}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="delete">
+		DELETE FROM wx_account
+		WHERE id = #{id}
+	</update>
+	
+	<select id="getWxAccountByAppid" resultType="WxAccount">
+		SELECT 
+			<include refid="wxAccountColumns"/>
+		FROM wx_account a
+		<include refid="wxAccountJoins"/>
+		WHERE a.appid = #{appid}
+	</select>
+	
+	<select id="getByWxAccount" resultType="WxAccount">
+		SELECT 
+			<include refid="wxAccountColumns"/>
+		FROM wx_account a
+		<trim prefix="WHERE" suffixOverrides="AND">
+			<if test="source != null and source != ''">
+				source = #{source} and
+			</if>
+			<if test="groupId != null and groupId != ''">
+				group_id = #{groupId} and
+			</if>
+		</trim>
+	</select>
+	
+</mapper>

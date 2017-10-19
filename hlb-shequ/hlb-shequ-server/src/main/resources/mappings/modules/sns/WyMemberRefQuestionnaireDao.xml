@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.haolinbang.modules.sns.dao.WyMemberRefQuestionnaireDao">
+    
+	<sql id="wyMemberRefQuestionnaireColumns">
+		a.mem_que_id AS "memQueId",
+		a.memberid AS "memberid",
+		a.questionnaireid AS "questionnaireid",
+		a.subjectid AS "subjectid",
+		a.optionid AS "optionid",
+		a.content AS "content",
+		a.createtime AS "createtime"
+	</sql>
+	
+	<sql id="wyMemberRefQuestionnaireJoins">
+	</sql>
+    
+	<select id="get" resultType="WyMemberRefQuestionnaire">
+		SELECT 
+			<include refid="wyMemberRefQuestionnaireColumns"/>
+		FROM wy_member_ref_questionnaire a
+		<include refid="wyMemberRefQuestionnaireJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="WyMemberRefQuestionnaire">
+		SELECT 
+			<include refid="wyMemberRefQuestionnaireColumns"/>
+		FROM wy_member_ref_questionnaire a
+		<include refid="wyMemberRefQuestionnaireJoins"/>
+		<where>
+			
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="WyMemberRefQuestionnaire">
+		SELECT 
+			<include refid="wyMemberRefQuestionnaireColumns"/>
+		FROM wy_member_ref_questionnaire a
+		<include refid="wyMemberRefQuestionnaireJoins"/>
+		<where>
+			
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert" useGeneratedKeys="true" keyProperty="mem_que_id">
+		INSERT INTO wy_member_ref_questionnaire(
+			memberid,
+			questionnaireid,
+			subjectid,
+			optionid,
+			content,
+			createtime
+		) VALUES (
+			#{memberid},
+			#{questionnaireid},
+			#{subjectid},
+			#{optionid},
+			#{content},
+			#{createtime}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE wy_member_ref_questionnaire SET 	
+			mem_que_id = #{memQueId},
+			memberid = #{memberid},
+			questionnaireid = #{questionnaireid},
+			subjectid = #{subjectid},
+			optionid = #{optionid},
+			content = #{content},
+			createtime = #{createtime}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="delete">
+		DELETE FROM wy_member_ref_questionnaire
+		WHERE id = #{id}
+	</update>
+	
+</mapper>

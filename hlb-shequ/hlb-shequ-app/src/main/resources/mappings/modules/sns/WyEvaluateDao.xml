@@ -1,0 +1,121 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.haolinbang.modules.sns.dao.WyEvaluateDao">
+    
+	<sql id="wyEvaluateColumns">
+		a.id AS "id",
+		a.relation_id AS "relationId",
+		a.member_id AS "memberId",
+		a.title AS "title",
+		a.content AS "content",
+		a.star_1 AS "star1",
+		a.star_2 AS "star2",
+		a.star_3 AS "star3",
+		a.star_4 AS "star4",
+		a.star_5 AS "star5",
+		a.create_date AS "createDate",
+		a.update_date AS "updateDate"
+	</sql>
+	
+	<sql id="wyEvaluateJoins">
+	</sql>
+    
+	<select id="get" resultType="WyEvaluate">
+		SELECT 
+			<include refid="wyEvaluateColumns"/>
+		FROM wy_evaluate a
+		<include refid="wyEvaluateJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="WyEvaluate">
+		SELECT 
+			<include refid="wyEvaluateColumns"/>
+		FROM wy_evaluate a
+		<include refid="wyEvaluateJoins"/>
+		<where>
+			
+			<if test="title != null and title != ''">
+				AND a.title LIKE 
+					<if test="dbName == 'oracle'">'%'||#{title}||'%'</if>
+					<if test="dbName == 'mssql'">'%'+#{title}+'%'</if>
+					<if test="dbName == 'mysql'">concat('%',#{title},'%')</if>
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="WyEvaluate">
+		SELECT 
+			<include refid="wyEvaluateColumns"/>
+		FROM wy_evaluate a
+		<include refid="wyEvaluateJoins"/>
+		<where>
+			
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert" useGeneratedKeys="true" keyProperty="id">
+		INSERT INTO wy_evaluate(
+			relation_id,
+			member_id,
+			title,
+			content,
+			star_1,
+			star_2,
+			star_3,
+			star_4,
+			star_5,
+			create_date,
+			update_date
+		) VALUES (
+			#{relationId},
+			#{memberId},
+			#{title},
+			#{content},
+			#{star1},
+			#{star2},
+			#{star3},
+			#{star4},
+			#{star5},
+			#{createDate},
+			#{updateDate}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE wy_evaluate SET 	
+			relation_id = #{relationId},
+			member_id = #{memberId},
+			title = #{title},
+			content = #{content},
+			star_1 = #{star1},
+			star_2 = #{star2},
+			star_3 = #{star3},
+			star_4 = #{star4},
+			star_5 = #{star5},
+			update_date = #{updateDate}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="delete">
+		DELETE FROM wy_evaluate
+		WHERE id = #{id}
+	</update>
+	
+</mapper>

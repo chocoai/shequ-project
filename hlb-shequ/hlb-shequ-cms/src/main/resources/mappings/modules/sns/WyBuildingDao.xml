@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.haolinbang.modules.sns.dao.WyBuildingDao">
+    
+	<sql id="wyBuildingColumns">
+		a.building_id AS "buildingId",
+		a.source AS "source",
+		a.wyid AS "wyid",
+		a.province AS "province",
+		a.city AS "city",
+		a.area AS "area",
+		a.address AS "address",
+		a.wybh AS "wybh",
+		a.wymc AS "wymc",
+		a.group_id AS "groupId"
+	</sql>
+	
+	<sql id="wyBuildingJoins">
+	</sql>
+    
+	<select id="get" resultType="WyBuilding">
+		SELECT 
+			<include refid="wyBuildingColumns"/>
+		FROM wy_building a
+		<include refid="wyBuildingJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="WyBuilding">
+		SELECT 
+			<include refid="wyBuildingColumns"/>
+		FROM wy_building a
+		<include refid="wyBuildingJoins"/>
+		<where>
+			
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="WyBuilding">
+		SELECT 
+			<include refid="wyBuildingColumns"/>
+		FROM wy_building a
+		<include refid="wyBuildingJoins"/>
+		<where>
+			
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert" useGeneratedKeys="true" keyProperty="building_id">
+		INSERT INTO wy_building(
+			source,
+			wyid,
+			province,
+			city,
+			area,
+			address,
+			wybh,
+			wymc,
+			group_id
+		) VALUES (
+			#{source},
+			#{wyid},
+			#{province},
+			#{city},
+			#{area},
+			#{address},
+			#{wybh},
+			#{wymc},
+			#{groupId}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE wy_building SET
+			province = #{province},
+			city = #{city},
+			area = #{area},
+			address = #{address},
+			wybh = #{wybh},
+			wymc = #{wymc}
+			<if test="groupId != null and groupId != ''">
+			,group_id = #{groupId}
+			</if>
+		WHERE source = #{source} and wyid = #{wyid}
+	</update>
+	
+	<update id="delete">
+		DELETE FROM wy_building
+		WHERE id = #{id}
+	</update>
+	
+	<update id="deleteAll">
+		DELETE FROM wy_building
+		WHERE 1=1
+	</update>
+	
+	<select id="getBySourceAndWyid" resultType="WyBuilding">
+		SELECT 
+			<include refid="wyBuildingColumns"/>
+		FROM wy_building a
+		WHERE a.source = #{source} and a.wyid = #{wyid}
+	</select>
+</mapper>

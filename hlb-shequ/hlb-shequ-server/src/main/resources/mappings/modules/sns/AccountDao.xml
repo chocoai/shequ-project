@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.haolinbang.modules.sns.dao.AccountDao">
+    
+	<select id="getWeixinAccount" resultType="Account">
+		SELECT
+			appid,appuserid,appv_key appvKey,wyid,source,platp_key platpKey,platsystem,status,offline,appSecret,wxid,ltid
+		FROM
+			wy_aibei_account t
+		WHERE
+			t.`status` = '1'
+		AND t.platsystem = '1'
+	</select>	
+	
+	<select id="getSources" resultType="string">
+		SELECT
+			source
+		FROM
+			wy_aibei_account t
+		WHERE
+			t.`status` = '1'
+	</select>
+</mapper>

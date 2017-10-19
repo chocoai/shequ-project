@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.haolinbang.modules.weixin.dao.WxNewsMultiDao">
+    
+	<sql id="wxNewsMultiColumns">
+		a.id AS "id",
+		a.account_id AS "account.id",
+		a.keywords AS "keywords",
+		a.news AS "news",
+		a.create_by AS "createBy.id",
+		a.create_date AS "createDate",
+		a.update_by AS "updateBy.id",
+		a.update_date AS "updateDate",
+		a.remarks AS "remarks",
+		a.del_flag AS "delFlag"
+	</sql>
+	
+	<sql id="wxNewsMultiJoins">
+	</sql>
+    
+	<select id="get" resultType="WxNewsMulti">
+		SELECT 
+			<include refid="wxNewsMultiColumns"/>
+		FROM wx_news_multi a
+		<include refid="wxNewsMultiJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="WxNewsMulti">
+		SELECT 
+			<include refid="wxNewsMultiColumns"/>
+		FROM wx_news_multi a
+		<include refid="wxNewsMultiJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+			<if test="account !=null and account.id !=null and account.id !=''">
+				AND a.account_id = #{account.id}
+			</if>
+			<if test="keywords != null and keywords != ''">
+				AND a.keywords LIKE 
+					<if test="dbName == 'oracle'">'%'||#{keywords}||'%'</if>
+					<if test="dbName == 'mssql'">'%'+#{keywords}+'%'</if>
+					<if test="dbName == 'mysql'">concat('%',#{keywords},'%')</if>
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="WxNewsMulti">
+		SELECT 
+			<include refid="wxNewsMultiColumns"/>
+		FROM wx_news_multi a
+		<include refid="wxNewsMultiJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO wx_news_multi(
+			id,
+			account_id,
+			keywords,
+			news,
+			create_by,
+			create_date,
+			update_by,
+			update_date,
+			remarks,
+			del_flag
+		) VALUES (
+			#{id},
+			#{account.id},
+			#{keywords},
+			#{news},
+			#{createBy.id},
+			#{createDate},
+			#{updateBy.id},
+			#{updateDate},
+			#{remarks},
+			#{delFlag}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE wx_news_multi SET 	
+			account_id = #{account.id},
+			keywords = #{keywords},
+			news = #{news},
+			update_by = #{updateBy.id},
+			update_date = #{updateDate},
+			remarks = #{remarks}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="delete">
+		UPDATE wx_news_multi SET 
+			del_flag = #{DEL_FLAG_DELETE}
+		WHERE id = #{id}
+	</update>	
+	
+	
+</mapper>

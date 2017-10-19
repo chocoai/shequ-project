@@ -1,0 +1,174 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.haolinbang.modules.sys.dao.AppMenuDao">
+    
+	<sql id="appMenuColumns">
+		a.id AS "id",
+		a.parent_id AS "parent.id",
+		a.parent_ids AS "parentIds",
+		a.name AS "name",
+		a.sort AS "sort",
+		a.href AS "href",
+		a.target AS "target",
+		a.icon AS "icon",
+		a.color AS "color",
+		a.is_show AS "isShow",
+		a.permission AS "permission",
+		a.sys_type AS "sysType",
+		a.create_by AS "createBy.id",
+		a.create_date AS "createDate",
+		a.update_by AS "updateBy.id",
+		a.update_date AS "updateDate",
+		a.remarks AS "remarks",
+		a.del_flag AS "delFlag",
+		a.screen_code AS "screenCode"
+	</sql>
+	
+	<sql id="appMenuJoins">
+	</sql>
+    
+	<select id="get" resultType="AppMenu">
+		SELECT 
+			<include refid="appMenuColumns"/>
+		FROM app_menu a
+		<include refid="appMenuJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="AppMenu">
+		SELECT 
+			<include refid="appMenuColumns"/>
+		FROM app_menu a
+		<include refid="appMenuJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+			AND a.sys_type = #{sysType}
+			<if test="name != null and name != ''">
+				AND a.name LIKE 
+					<if test="dbName == 'oracle'">'%'||#{name}||'%'</if>
+					<if test="dbName == 'mssql'">'%'+#{name}+'%'</if>
+					<if test="dbName == 'mysql'">concat('%',#{name},'%')</if>
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.sort ASC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="AppMenu">
+		SELECT 
+			<include refid="appMenuColumns"/>
+		FROM app_menu a
+		<include refid="appMenuJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+			AND a.sys_type = #{sysType}
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.sort ASC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert" useGeneratedKeys="true" keyProperty="id">
+		INSERT INTO app_menu(
+			parent_id,
+			parent_ids,
+			name,
+			sort,
+			href,
+			target,
+			icon,
+			color,
+			is_show,
+			permission,
+			sys_type,
+			create_by,
+			create_date,
+			update_by,
+			update_date,
+			remarks,
+			del_flag,
+			screen_code
+		) VALUES (
+			#{parent.id},
+			#{parentIds},
+			#{name},
+			#{sort},
+			#{href},
+			#{target},
+			#{icon},
+			#{color},
+			#{isShow},
+			#{permission},
+			#{sysType},
+			#{createBy.id},
+			#{createDate},
+			#{updateBy.id},
+			#{updateDate},
+			#{remarks},
+			#{delFlag},
+			#{screenCode}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE app_menu SET 	
+			parent_id = #{parent.id},
+			parent_ids = #{parentIds},
+			name = #{name},
+			sort = #{sort},
+			href = #{href},
+			target = #{target},
+			icon = #{icon},
+			color = #{color},
+			is_show = #{isShow},
+			permission = #{permission},
+			sys_type = #{sysType},
+			update_by = #{updateBy.id},
+			update_date = #{updateDate},
+			remarks = #{remarks},
+			screen_code = #{screenCode}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="delete">
+		UPDATE app_menu SET 
+			del_flag = #{DEL_FLAG_DELETE}
+		WHERE id = #{id}
+	</update>
+	
+	<select id="findByParentIdsLike" resultType="AppMenu">
+		SELECT
+			a.id,
+			a.parent_id AS "parent.id",
+			a.parent_ids
+		FROM app_menu a
+		WHERE a.del_flag = #{DEL_FLAG_NORMAL} 
+		AND a.parent_ids LIKE #{parentIds}
+		ORDER BY a.sort
+	</select>
+	
+	<update id="updateParentIds">
+		UPDATE app_menu SET 
+			parent_id = #{parent.id}, 
+			parent_ids = #{parentIds}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="updateSort">
+		UPDATE app_menu SET 
+			sort = #{sort}
+		WHERE id = #{id}
+	</update>
+	
+</mapper>

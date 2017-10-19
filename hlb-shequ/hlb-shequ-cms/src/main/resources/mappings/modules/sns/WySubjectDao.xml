@@ -1,0 +1,131 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.haolinbang.modules.sns.dao.WySubjectDao">
+    
+	<sql id="wySubjectColumns">
+		a.subjectid AS "subjectid",
+		a.classificationid AS "classificationid",
+		a.questionnaireid AS "questionnaireid",
+		a.title AS "title",
+		a.type AS "type",
+		a.notnull AS "notnull",
+		a.sortval AS "sortval",
+		a.status AS "status",
+		a.createtime AS "createtime",
+		a.updatetime AS "updatetime"
+	</sql>
+	
+	<sql id="wySubjectJoins">
+	</sql>
+    
+	<select id="get" resultType="WySubject">
+		SELECT 
+			<include refid="wySubjectColumns"/>
+		FROM wy_subject a
+		<include refid="wySubjectJoins"/>
+		WHERE a.subjectid = #{subjectid}
+	</select>
+	
+	<select id="findList" resultType="WySubject">
+		SELECT 
+			<include refid="wySubjectColumns"/>
+			,b.classificationname AS "classificationname"
+		FROM wy_subject a,  wy_classification b
+		<include refid="wySubjectJoins"/>
+		<where>
+			a.classificationid = b.classificationid
+			<if test="classificationid!=null">
+				and a.classificationid = #{classificationid}
+			</if>
+			<if test="questionnaireid!=null">
+				and a.questionnaireid = #{questionnaireid}
+			</if>
+			<if test="type==3">
+				and a.type in (0, 1)
+			</if>
+			<if test="title != null and title != ''">
+				AND a.title LIKE 
+					<if test="dbName == 'oracle'">'%'||#{title}||'%'</if>
+					<if test="dbName == 'mssql'">'%'+#{title}+'%'</if>
+					<if test="dbName == 'mysql'">concat('%',#{title},'%')</if>
+			</if>
+		</where>
+		ORDER BY a.sortval
+		<!-- <choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose> -->
+	</select>
+	
+	<select id="findAllList" resultType="WySubject">
+		SELECT 
+			<include refid="wySubjectColumns"/>
+		FROM wy_subject a
+		<include refid="wySubjectJoins"/>
+		<where>
+			
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert" useGeneratedKeys="true" keyProperty="subjectid">
+		INSERT INTO wy_subject(
+			classificationid,
+			questionnaireid,
+			title,
+			type,
+			notnull,
+			sortval,
+			status,
+			createtime,
+			updatetime
+		) VALUES (
+			#{classificationid},
+			#{questionnaireid},
+			#{title},
+			#{type},
+			#{notnull},
+			#{sortval},
+			#{status},
+			#{createtime},
+			#{updatetime}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE wy_subject SET 	
+			subjectid = #{subjectid},
+			classificationid = #{classificationid},
+			questionnaireid = #{questionnaireid},
+			title = #{title},
+			type = #{type},
+			notnull = #{notnull},
+			sortval = #{sortval},
+			status = #{status},
+			createtime = #{createtime},
+			updatetime = #{updatetime}
+		WHERE subjectid = #{subjectid}
+	</update>
+	
+	<update id="delete">
+		DELETE FROM wy_subject
+		WHERE subjectid = #{subjectid}
+	</update>
+	
+	<select id="getbyclassificationid" resultType="WySubject">
+		SELECT 
+			<include refid="wySubjectColumns"/>
+		FROM wy_subject a
+		<include refid="wySubjectJoins"/>
+		WHERE a.classificationid = #{classificationid}
+	</select>
+</mapper>

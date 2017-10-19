@@ -1,0 +1,115 @@
+.heading{
+	text-align: center;
+    height: 30px;
+    line-height: 30px;
+    font-size: 24px;
+    color: #FF9900;
+    margin: 10px;
+}
+
+.memberInfo{
+	height: 80px;
+}
+
+.baseInfo{
+	width: 70%;
+    float: left;
+}
+
+.info{
+	width: 100%;
+	margin-left: 4%;
+    margin-bottom: 5px;
+    font-size: 16px;
+}
+
+.info1{
+	margin-left: 4%;
+    width: 70%;
+}
+
+.info2{
+	margin-left: 4%;
+    width: 35%;
+}
+
+.avatar{
+    width: 20%;
+    float: left;
+}
+
+.roomtype{
+	height: 30px;
+    margin: 10px 0;
+    color: #0000FF;
+}
+
+.fwczbt{
+	width: 50%;
+    float: left;
+    text-align: right;
+}
+
+.fwcsbt{
+	width: 50%;
+    float: left;
+}
+
+.rent, .sale{
+	display: none;
+}
+
+.camerabg, .photo{
+	width: 20%;
+	margin-right: 4%;
+	float: left;
+	margin-bottom: 10px;
+}
+
+.deldiv{
+	position: absolute;
+	width: 20%;
+}
+
+.del{
+	width: 25%;
+    margin: -5px 0px 0px -5px;
+}
+
+.imgurl{
+	width: 100%;
+}
+
+.location_address{
+
+}
+
+.submit {
+	height: 120px;
+	margin-top: 10px;
+}
+
+.submit1 {
+	width: 23%;
+	margin: 15px 17% 0 17%;
+	float: left;
+}
+
+.submit2 {
+	width: 23%;
+	margin: 15px 17% 0 0;
+	float: left;
+}
+
+.imgtype{
+	width: 100%;
+}
+
+.inputstyle{
+	height: 30px;
+	font-size: 16px;
+}
+
+.textareastyle{
+	font-size: 16px;
+}

@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.haolinbang.modules.sys.dao.AppUserPermissionDao">
+    
+	<sql id="appUserPermissionColumns">
+		a.menu_id AS "menuId",
+		a.user_id AS "userId"
+	</sql>
+	
+	<sql id="appUserPermissionJoins">
+	
+	</sql>
+    
+	<select id="get" resultType="AppUserPermission">
+		SELECT 
+			<include refid="appUserPermissionColumns"/>
+		FROM app_user_permission a
+		<include refid="appUserPermissionJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="AppUserPermission">
+		SELECT 
+			<include refid="appUserPermissionColumns"/>
+		FROM app_user_permission a
+		<include refid="appUserPermissionJoins"/>
+		<where>
+			<if test="userId !=null and userId !=''">
+				AND a.user_id = #{userId}
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="AppUserPermission">
+		SELECT 
+			<include refid="appUserPermissionColumns"/>
+		FROM app_user_permission a
+		<include refid="appUserPermissionJoins"/>
+		<where>
+			<if test="userId !=null and userId !=''">
+				AND a.user_id = #{userId}
+			</if>
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO app_user_permission(
+			user_id,
+			menu_id
+		) VALUES (
+			#{userId},
+			#{menuId}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE app_user_permission SET 	
+			user_id = #{userId},
+			menu_id = #{menuId}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="delete">
+		DELETE FROM app_user_permission
+		WHERE id = #{id}
+	</update>
+	
+	<update id="deleteByPermissions">
+		DELETE FROM app_user_permission
+		WHERE user_id = #{uid}
+	</update>
+	
+</mapper>

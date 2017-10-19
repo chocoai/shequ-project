@@ -1,0 +1,256 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.haolinbang.modules.sns.dao.WyReBizActDao">
+    
+	<sql id="wyReBizActColumns">
+		a.id AS "id",
+		act.id AS "wyActDef.id",
+		act.key AS "wyActDef.key",
+		act.name AS "wyActDef.name",
+		act.proc_def_id AS "wyActDef.procDefId",
+		act.version AS "wyActDef.version",
+		act.category AS "wyActDef.category",
+		act.alias	AS "wyActDef.alias",
+		biz.id AS "wyBizDef.id",
+		biz.key AS "wyBizDef.key",
+		biz.name AS "wyBizDef.name",
+		a.source AS "source",
+		a.group_id AS "groupId",
+		a.is_default AS "isDefault"
+	</sql>
+	
+	<sql id="wyReBizActJoins">
+		LEFT JOIN wy_act_def act ON a.act_id = act.id
+		LEFT JOIN wy_biz_def biz ON a.biz_id = biz.id
+	</sql>
+    
+	<select id="get" resultType="WyReBizAct">
+		SELECT 
+			<include refid="wyReBizActColumns"/>
+		FROM wy_re_biz_act a
+		<include refid="wyReBizActJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="WyReBizAct">
+		SELECT 
+			<include refid="wyReBizActColumns"/>
+		FROM wy_re_biz_act a
+		<include refid="wyReBizActJoins"/>
+		<where>
+			act.state = 'active'
+			<if test="wyActDef !=null and wyActDef.id !=null and wyActDef.id !=''">
+				AND a.act_id = #{wyActDef.id}
+			</if>
+			<if test="wyBizDef !=null and wyBizDef.id !=null and wyBizDef.id !=''">
+				AND a.act_id = #{wyBizDef.id}
+			</if>
+			<if test="category !=null and category !=''">
+				AND biz.key = #{category}
+			</if>
+			<if test="source !=null and source !=''">
+				AND source = #{source}
+			</if>
+			<if test="groupId !=null and groupId !=''">
+				AND a.group_id = #{groupId}
+			</if>
+			 
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="WyReBizAct">
+		SELECT 
+			<include refid="wyReBizActColumns"/>
+		FROM wy_re_biz_act a
+		<include refid="wyReBizActJoins"/>			
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert" useGeneratedKeys="true" keyProperty="id">
+		INSERT INTO wy_re_biz_act(
+			act_id,
+			biz_id,
+			source,
+			group_id,
+			create_by,
+			create_date,
+			update_by,
+			update_date,
+			remarks,
+			del_flag,
+			is_default
+		) VALUES (
+			#{wyActDef.id},
+			#{wyBizDef.id},
+			#{source},
+			#{groupId},
+			#{createBy.id},
+			#{createDate},
+			#{updateBy.id},
+			#{updateDate},
+			#{remarks},
+			#{delFlag},
+			#{isDefault}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE wy_re_biz_act SET 	
+			act_id = #{wyActDef.id},
+			biz_id = #{wyBizDef.id},
+			source = #{source},
+			group_id = #{groupId},
+			update_by = #{updateBy.id},
+			update_date = #{updateDate},
+			is_default = #{isDefault}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="delete">
+		DELETE FROM wy_re_biz_act
+		WHERE id = #{id}
+	</update>
+	
+	<select id="getBizActs" resultMap="getBizActsMap">
+		SELECT
+			re.id							re_id,
+			act.id						act_id,	
+			act.`key`					act_key,
+			act.`name`				act_name,
+			act.proc_def_id		act_proc_def_id,
+			act.group_id			act_group_id,
+			biz.id						biz_id,
+			biz.`key`					biz_key,
+			biz.`name`				biz_name,
+			biz.group_id			biz_group_id
+		FROM
+			wy_re_biz_act re
+		LEFT JOIN wy_act_def act ON re.act_id = act.id
+		LEFT JOIN wy_biz_def biz ON re.biz_id = biz.id	
+		<where>
+			<if test="wyReBizAct !=null and wyReBizAct.wyActDef !=null and wyReBizAct.wyActDef.name !=null and wyReBizAct.wyActDef.name !=''">
+				AND act.name LIKE CONCAT('%',#{wyReBizAct.wyActDef.name},'%')
+			</if>
+			<if test="wyReBizAct !=null and wyReBizAct.wyBizDef !=null and wyReBizAct.wyBizDef.name !=null and wyReBizAct.wyBizDef.name !=''">
+				AND biz.name LIKE CONCAT('%',#{wyReBizAct.wyBizDef.name},'%')
+			</if>
+		</where>
+	</select>	
+	
+	
+	<select id="getBizActByDefId" resultMap="getBizActsMap">
+		SELECT
+			re.id							re_id,
+			act.id						act_id,	
+			act.`key`					act_key,
+			act.`name`				act_name,
+			act.proc_def_id		act_proc_def_id,
+			act.group_id			act_group_id,
+			biz.id						biz_id,
+			biz.`key`					biz_key,
+			biz.`name`				biz_name,
+			biz.group_id			biz_group_id
+		FROM
+			wy_re_biz_act re
+		LEFT JOIN wy_act_def act ON re.act_id = act.id
+		LEFT JOIN wy_biz_def biz ON re.biz_id = biz.id	
+		<where>
+			<if test="procDefinitionId !=null and procDefinitionId !=''">
+				AND act.proc_def_id = #{procDefinitionId}
+			</if>			
+		</where>
+	</select>
+	
+	<resultMap type="com.haolinbang.modules.sns.entity.WyReBizAct" id="getBizActsMap">
+		<id property="id" column="re_id" />
+		<association property="wyActDef" javaType="com.haolinbang.modules.sns.entity.WyActDef">
+			<id property="id" column="act_id"/>
+			<result property="key" column="act_key"/>
+			<result property="name" column="act_name"/>
+			<result property="groupId" column="act_group_id"/>
+			<result property="procDefId" column="act_proc_def_id"/>			
+		</association>
+		<association property="wyBizDef" javaType="com.haolinbang.modules.sns.entity.WyBizDef">
+			<id property="id" column="biz_id"/>
+			<result property="key" column="biz_key"/>
+			<result property="name" column="biz_name"/>
+			<result property="groupId" column="biz_group_id"/>			
+		</association>		
+	</resultMap>
+	
+	<select id="getWyReBizActByActIdAndBizId" resultType="WyReBizAct">
+		SELECT 
+			<include refid="wyReBizActColumns"/>
+		FROM wy_re_biz_act a
+		<include refid="wyReBizActJoins"/>
+		WHERE a.act_id = #{actId}
+		AND a.biz_id = #{bizId}		
+	</select>
+	
+	<select id="getWyReBizActByActId" resultType="WyReBizAct">
+		SELECT 
+			<include refid="wyReBizActColumns"/>
+		FROM wy_re_biz_act a
+		<include refid="wyReBizActJoins"/>
+		WHERE a.biz_id = #{bizId}
+	</select>	
+	
+	<select id="getWyReBizAct" resultType="WyReBizAct">
+		SELECT 
+			<include refid="wyReBizActColumns"/>
+		FROM wy_re_biz_act a
+		<include refid="wyReBizActJoins"/>
+		WHERE a.biz_id = #{bizId}
+		AND a.source = #{source}
+		AND a.group_id = #{groupId}
+		AND a.act_id = #{actId}
+	</select>
+	
+	<select id="getDefaultWyReBizAct" resultType="WyReBizAct">
+		SELECT 
+			<include refid="wyReBizActColumns"/>
+		FROM wy_re_biz_act a
+		<include refid="wyReBizActJoins"/>
+		WHERE a.biz_id = #{bizId}
+		AND a.source = #{source}
+		AND a.group_id = #{groupId}
+		AND a.is_default = 1
+		LIMIT 0,1
+	</select>
+	
+	<select id="getWyReBizActByBizid" resultType="WyReBizAct">
+		SELECT 
+			<include refid="wyReBizActColumns"/>
+		FROM wy_re_biz_act a
+		<include refid="wyReBizActJoins"/>
+		WHERE a.biz_id = #{bizId}
+		AND a.source = #{source}
+		AND a.group_id = #{groupId}
+	</select>
+	
+	<select id="getBizActByBizKey" resultType="WyReBizAct">
+		SELECT 
+			<include refid="wyReBizActColumns"/>
+		FROM wy_re_biz_act a
+		<include refid="wyReBizActJoins"/>
+		WHERE biz.key = #{bizKey}
+		AND a.source = #{source}
+		AND a.group_id = #{groupId}
+		AND a.is_default = 1
+		LIMIT 0,1
+	</select>
+	
+</mapper>

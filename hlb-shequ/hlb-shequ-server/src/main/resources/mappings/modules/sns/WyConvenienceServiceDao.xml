@@ -1,0 +1,144 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.haolinbang.modules.sns.dao.WyConvenienceServiceDao">
+    
+	<sql id="wyConvenienceServiceColumns">
+		a.service_id AS "serviceId",
+		a.content AS "content",
+		a.create_time AS "createTime",
+		a.source AS "source",
+		a.group_id AS "groupId",
+		a.type AS "type",
+		a.wx_account_id AS "wxAccountId",
+		a.appid AS "appid",
+		a.group_info AS "groupInfo"
+	</sql>
+	
+	<sql id="wyConvenienceServiceJoins">
+	</sql>
+    
+	<select id="get" resultType="WyConvenienceService">
+		SELECT 
+			<include refid="wyConvenienceServiceColumns"/>
+		FROM wy_convenience_service a
+		<include refid="wyConvenienceServiceJoins"/>
+		WHERE a.service_id = #{id}
+	</select>
+	
+	<select id="findList" resultType="WyConvenienceService">
+		SELECT 
+			<include refid="wyConvenienceServiceColumns"/>
+		FROM wy_convenience_service a
+		<include refid="wyConvenienceServiceJoins"/>
+		<where>
+			
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="WyConvenienceService">
+		SELECT 
+			<include refid="wyConvenienceServiceColumns"/>
+		FROM wy_convenience_service a
+		<include refid="wyConvenienceServiceJoins"/>
+		<where>
+			
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO wy_convenience_service(
+			service_id,
+			content,
+			create_time,
+			source,
+			group_id,
+			type
+		) VALUES (
+			#{serviceId},
+			#{content},
+			#{createTime},
+			#{source},
+			#{groupId},
+			#{type}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE wy_convenience_service SET 	
+			service_id = #{serviceId},
+			content = #{content},
+			create_time = #{createTime},
+			source = #{source},
+			group_id = #{groupId},
+			type = #{type}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="delete">
+		DELETE FROM wy_convenience_service
+		WHERE id = #{id}
+	</update>
+	
+	<select id="getbysource" resultType="WyConvenienceService">
+		SELECT 
+			<include refid="wyConvenienceServiceColumns"/>
+		FROM wy_convenience_service a
+		<include refid="wyConvenienceServiceJoins"/>
+		WHERE a.source = #{source}
+	</select>
+	
+	<select id="getbySourceAndGroupId" resultType="WyConvenienceService">
+		SELECT 
+			<include refid="wyConvenienceServiceColumns"/>
+		FROM wy_convenience_service a
+		<include refid="wyConvenienceServiceJoins"/>
+		WHERE a.source = #{source} and a.group_id = #{groupId}
+	</select>
+	
+	<select id="getbySourceAndGroupIdAndType" resultType="WyConvenienceService">
+		SELECT 
+			<include refid="wyConvenienceServiceColumns"/>
+		FROM wy_convenience_service a
+		<include refid="wyConvenienceServiceJoins"/>
+		WHERE a.source = #{source} and a.group_id = #{groupId} and a.type = #{type}
+	</select>
+	
+	<select id="getbySourceAndType" resultType="WyConvenienceService">
+		SELECT 
+			<include refid="wyConvenienceServiceColumns"/>
+		FROM wy_convenience_service a
+		<include refid="wyConvenienceServiceJoins"/>
+		WHERE a.source = #{source} and a.type = #{type}
+	</select>
+	
+	<select id="getCompanyProfile" resultType="WyConvenienceService">
+		SELECT 
+			<include refid="wyConvenienceServiceColumns"/>
+		FROM wy_convenience_service a
+		<include refid="wyConvenienceServiceJoins"/>
+		WHERE a.source = #{source} and a.group_id = #{groupId} and a.type = "3"
+	</select>
+	
+	<select id="getByAppid_Wymc_Type" resultType="WyConvenienceService">
+		SELECT 
+			<include refid="wyConvenienceServiceColumns"/>
+		FROM wy_convenience_service a
+		<include refid="wyConvenienceServiceJoins"/>
+		WHERE a.appid = #{appid} and a.group_info LIKE CONCAT('%',#{wymc},'%') and a.type = #{type}
+	</select>
+	
+</mapper>

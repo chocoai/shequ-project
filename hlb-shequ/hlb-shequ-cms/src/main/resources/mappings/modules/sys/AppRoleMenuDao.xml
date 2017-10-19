@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.haolinbang.modules.sys.dao.AppRoleMenuDao">
+    
+	<sql id="appRoleMenuColumns">
+		a.role_id AS "roleId",
+		a.menu_id AS "menuId"
+	</sql>
+	
+	<sql id="appRoleMenuJoins">
+	</sql>
+    
+	<select id="get" resultType="AppRoleMenu">
+		SELECT 
+			<include refid="appRoleMenuColumns"/>
+		FROM app_role_menu a
+		<include refid="appRoleMenuJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="AppRoleMenu">
+		SELECT 
+			<include refid="appRoleMenuColumns"/>
+		FROM app_role_menu a
+		<include refid="appRoleMenuJoins"/>
+		<where>
+			<if test="roleId !=null and roleId!=''">
+				a.role_id = #{roleId}
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="AppRoleMenu">
+		SELECT 
+			<include refid="appRoleMenuColumns"/>
+		FROM app_role_menu a
+		<include refid="appRoleMenuJoins"/>
+		<where>
+			
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO app_role_menu(
+			role_id,
+			menu_id
+		) VALUES (
+			#{roleId},
+			#{menuId}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE app_role_menu SET 	
+			role_id = #{roleId},
+			menu_id = #{menuId}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="delete">
+		DELETE FROM app_role_menu
+		WHERE id = #{id}
+	</update>
+	
+	<update id="deleteByRoleId">
+		DELETE FROM app_role_menu
+		WHERE role_id = #{roleId}
+	</update>
+	
+</mapper>

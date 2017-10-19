@@ -1,0 +1,171 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.haolinbang.modules.sns.dao.WyFleaMarketDao">
+    
+	<sql id="wyFleaMarketColumns">
+		a.id AS "id",
+		a.member_id AS "memberId",
+		a.goods_name AS "goodsName",
+		a.goods_desc AS "goodsDesc",
+		a.price AS "price",
+		a.gift_giving AS "giftGiving",
+		a.imgs AS "imgs",
+		a.location_address AS "locationAddress",
+		a.comment_num AS "commentNum",
+		a.dianzan_num AS "dianzanNum",
+		a.longitude AS "longitude",
+		a.latitude AS "latitude",
+		a.create_date AS "createDate",
+		a.update_date AS "updateDate",
+		a.audit AS "audit",
+		a.source AS "source",
+		a.group_id AS "groupId",
+		a.appid AS "appid",
+		a.wyid AS "wyid",
+		m.member_id AS "member.memberId",
+		m.member_name	AS "member.memberName",
+		m.avatarurl AS "member.avatarurl",
+		m.nickname AS "member.nickname"
+	</sql>
+	
+	<sql id="wyFleaMarketJoins">
+		join wy_member m on m.member_id = a.member_id
+	</sql>
+    
+	<select id="get" resultType="WyFleaMarket">
+		SELECT 
+			<include refid="wyFleaMarketColumns"/>
+		FROM wy_flea_market a
+		<include refid="wyFleaMarketJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="WyFleaMarket">
+		SELECT 
+			<include refid="wyFleaMarketColumns"/>
+		FROM wy_flea_market a
+		<include refid="wyFleaMarketJoins"/>
+		<where>	
+			a.audit =1 
+			<if test="goodsName !=null and goodsName !=''">
+				AND a.goods_name LIKE CONCAT('%',#{goodsName},'%')
+			</if>
+			<if test="memberId !=null and memberId !=''">
+				AND a.member_id = #{memberId}
+			</if>
+			<if test="source !=null and source !=''">
+				AND a.source = #{source}
+			</if>
+			<if test="groupId !=null and groupId !=''">
+				AND a.group_id = #{groupId}
+			</if>
+			<if test="appid !=null and appid !=''">
+				AND a.appid = #{appid}
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="WyFleaMarket">
+		SELECT 
+			<include refid="wyFleaMarketColumns"/>
+		FROM wy_flea_market a
+		<include refid="wyFleaMarketJoins"/>
+		<where>
+			
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO wy_flea_market(
+			member_id,
+			goods_name,
+			goods_desc,
+			price,
+			gift_giving,
+			imgs,
+			location_address,
+			comment_num,
+			dianzan_num,
+			longitude,
+			latitude,
+			create_date,
+			update_date,
+			audit,
+			source,
+			group_id,
+			appid,
+			wyid
+		) VALUES (
+			#{memberId},
+			#{goodsName},
+			#{goodsDesc},
+			#{price},
+			#{giftGiving},
+			#{imgs},
+			#{locationAddress},
+			#{commentNum},
+			#{dianzanNum},
+			#{longitude},
+			#{latitude},
+			#{createDate},
+			#{updateDate},
+			#{audit},
+			#{source},
+			#{groupId},
+			#{appid},
+			#{wyid}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE wy_flea_market SET 	
+			member_id = #{memberId},
+			goods_name = #{goodsName},
+			goods_desc = #{goodsDesc},
+			price = #{price},
+			gift_giving = #{giftGiving},
+			imgs = #{imgs},
+			location_address = #{locationAddress},
+			comment_num = #{commentNum},
+			dianzan_num = #{dianzanNum},
+			longitude = #{longitude},
+			latitude = #{latitude},
+			update_date = #{updateDate},
+			audit = #{audit},
+			source = #{source},
+			group_id = #{groupId},
+			appid = #{appid},
+			wyid = #{wyid}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="delete">
+		DELETE FROM wy_flea_market
+		WHERE id = #{id}
+	</update>
+	
+	<update id="updates">
+		UPDATE wy_flea_market SET
+			<if test="commentNum != null">
+				comment_num = #{commentNum}
+			</if>
+		WHERE id = #{id}
+	</update>
+	
+</mapper>

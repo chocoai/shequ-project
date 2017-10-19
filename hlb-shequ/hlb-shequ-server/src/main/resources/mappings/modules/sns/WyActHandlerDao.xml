@@ -1,0 +1,165 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.haolinbang.modules.sns.dao.WyActHandlerDao">
+
+	<sql id="wyActHandlerColumns">
+		a.id AS "id",
+		a.proc_def_id AS "procDefId",
+		a.task_id AS
+		"taskId",
+		a.handler_instance AS "handlerInstance",
+		a.handler_class AS
+		"handlerClass",
+		a.handler_method AS "handlerMethod",
+		a.node_type AS
+		"nodeType",
+		a.node_key AS "nodeKey",
+		a.sort AS "sort",
+		a.create_by AS
+		"createBy.id",
+		a.create_date AS "createDate",
+		a.update_by AS
+		"updateBy.id",
+		a.update_date AS "updateDate",
+		a.remarks AS "remarks",
+		a.del_flag AS "delFlag",
+		a.event_name AS "eventName",
+		a.type AS "type"
+	</sql>
+
+	<sql id="wyActHandlerJoins">
+	</sql>
+
+	<select id="get" resultType="WyActHandler">
+		SELECT
+		<include refid="wyActHandlerColumns" />
+		FROM wy_act_handler a
+		<include refid="wyActHandlerJoins" />
+		WHERE a.id = #{id}
+	</select>
+
+	<select id="findList" resultType="WyActHandler">
+		SELECT
+		<include refid="wyActHandlerColumns" />
+		FROM wy_act_handler a
+		<include refid="wyActHandlerJoins" />
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+
+	<select id="findAllList" resultType="WyActHandler">
+		SELECT
+		<include refid="wyActHandlerColumns" />
+		FROM wy_act_handler a
+		<include refid="wyActHandlerJoins" />
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+
+	<insert id="insert">
+		INSERT INTO wy_act_handler(
+		proc_def_id,
+		task_id,
+		handler_instance,
+		handler_class,
+		handler_method,
+		node_type,
+		node_key,
+		sort,
+		create_by,
+		create_date,
+		update_by,
+		update_date,
+		remarks,
+		del_flag,
+		event_name,
+		type
+		)
+		VALUES (
+		#{procDefId},
+		#{taskId},
+		#{handlerInstance},
+		#{handlerClass},
+		#{handlerMethod},
+		#{nodeType},
+		#{nodeKey},
+		#{sort},
+		#{createBy.id},
+		#{createDate},
+		#{updateBy.id},
+		#{updateDate},
+		#{remarks},
+		#{delFlag},
+		#{eventName},
+		#{type}
+		)
+	</insert>
+
+	<update id="update">
+		UPDATE wy_act_handler SET
+		proc_def_id = #{procDefId},
+		task_id = #{taskId},
+		handler_instance = #{handlerInstance},
+		handler_class = #{handlerClass},
+		handler_method = #{handlerMethod},
+		node_type = #{nodeType},
+		node_key = #{nodeKey},
+		sort = #{sort},
+		update_by = #{updateBy.id},
+		update_date = #{updateDate},
+		remarks =#{remarks},
+		event_name=#{eventName},
+		type = #{type}
+		WHERE id = #{id}
+	</update>
+
+	<update id="delete">
+		UPDATE wy_act_handler SET
+		del_flag =
+		#{DEL_FLAG_DELETE}
+		WHERE id = #{id}
+	</update>
+
+
+	<select id="getWyActHandlerByProcdefidAndTaskkey" resultType="WyActHandler">
+		SELECT
+		<include refid="wyActHandlerColumns" />
+		FROM wy_act_handler a
+		<include refid="wyActHandlerJoins" />
+		WHERE a.proc_def_id = #{procDefId}
+		AND a.task_id = #{taskDefinitionKey}
+		AND a.event_name = #{eventName}
+		order by a.sort asc
+	</select>
+	
+	<select id="getWyActHandlerByProcdefidAndTaskkeyByType" resultType="WyActHandler">
+		SELECT
+		<include refid="wyActHandlerColumns" />
+		FROM wy_act_handler a
+		<include refid="wyActHandlerJoins" />
+		WHERE a.proc_def_id = #{procDefId}
+		AND a.task_id = #{taskDefinitionKey}
+		AND a.event_name = #{eventName}
+		AND a.type = #{type}
+		order by a.sort asc
+	</select>
+
+</mapper>

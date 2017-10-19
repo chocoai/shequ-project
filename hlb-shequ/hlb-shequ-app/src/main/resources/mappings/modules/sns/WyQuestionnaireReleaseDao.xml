@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.haolinbang.modules.sns.dao.WyQuestionnaireReleaseDao">
+    
+	<sql id="wyQuestionnaireReleaseColumns">
+		a.release_id AS "releaseId",
+		a.questionnaireid AS "questionnaireid",
+		a.num AS "num",
+		a.runstatus AS "runstatus",
+		a.endtime AS "endtime",
+		a.createtime AS "createtime"
+	</sql>
+	
+	<sql id="wyQuestionnaireReleaseJoins">
+	</sql>
+    
+	<select id="get1" resultType="WyQuestionnaireRelease">
+		SELECT 
+			<include refid="wyQuestionnaireReleaseColumns"/>
+			,b.title AS "title"
+		FROM wy_questionnaire_release a, wy_questionnaire b
+		<include refid="wyQuestionnaireReleaseJoins"/>
+		WHERE a.questionnaireid = b.questionnaireid and a.questionnaireid = #{questionnaireid}
+	</select>
+	
+	<select id="get" resultType="WyQuestionnaireRelease">
+		SELECT 
+			<include refid="wyQuestionnaireReleaseColumns"/>
+			,b.title AS "title"
+		FROM wy_questionnaire_release a, wy_questionnaire b
+		<include refid="wyQuestionnaireReleaseJoins"/>
+		WHERE a.questionnaireid = b.questionnaireid and a.release_id = #{releaseId}
+		
+	<!-- 	<if test="questionnaireid!=null and questionnaireid!=''"> and a.questionnaireid = #{questionnaireid}</if> -->
+	</select>
+	
+	<select id="findList" resultType="WyQuestionnaireRelease">
+		SELECT 
+			<include refid="wyQuestionnaireReleaseColumns"/>
+			,b.title AS "title"
+		FROM wy_questionnaire_release a, wy_questionnaire b
+		<include refid="wyQuestionnaireReleaseJoins"/>
+		<trim prefix="WHERE" suffixOverrides="AND">
+			<if test="source!=null and source!=''">
+				b.source = #{source} and
+			</if>
+			<if test="groupid!=null and groupid!=''">
+				b.groupid = #{groupid} and
+			</if>
+			<if test="questionnaireid!=null and questionnaireid!=''">
+				a.questionnaireid = #{questionnaireid} and
+			</if>
+			a.questionnaireid = b.questionnaireid
+		</trim>
+		<where>
+			 
+			
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="WyQuestionnaireRelease">
+		SELECT 
+			<include refid="wyQuestionnaireReleaseColumns"/>
+		FROM wy_questionnaire_release a
+		<include refid="wyQuestionnaireReleaseJoins"/>
+		<where>
+			
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert" useGeneratedKeys="true" keyProperty="release_id">
+		INSERT INTO wy_questionnaire_release(
+			questionnaireid,
+			num,
+			runstatus,
+			endtime,
+			createtime
+		) VALUES (
+			#{questionnaireid},
+			#{num},
+			#{runstatus},
+			#{endtime},
+			#{createtime}
+		)
+	</insert>
+	
+	<update id="update">
+		 UPDATE wy_questionnaire_release
+		 <trim prefix="set" suffixOverrides=",">
+			  <if test="releaseId!=null">release_id = #{releaseId},</if>
+			  <if test="questionnaireid!=null">questionnaireid = #{questionnaireid},</if>
+			  <if test="num!=null">num = #{num},</if>
+			  <if test="runstatus!=null">runstatus = #{runstatus},</if>
+			  <if test="endtime!=null">endtime = #{endtime},</if>
+			  <if test="createtime!=null">createtime = #{createtime},</if>
+		 </trim>
+		 WHERE release_id = #{releaseId}
+	</update>
+	
+	<update id="delete">
+		DELETE FROM wy_questionnaire_release
+		WHERE release_id = #{releaseId}
+	</update>
+	
+</mapper>

@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.haolinbang.modules.sns.dao.WyRepairBudgetMaterielDao">
+    
+	<sql id="wyRepairBudgetMaterielColumns">
+		a.id AS "id",
+		a.repair_id AS "repairId",
+		a.create_date AS "createDate",
+		a.update_date AS "updateDate",
+		a.del_flag AS "delFlag",
+		a.material_no AS "materialNo",
+		a.material_name AS "materialName",
+		a.specification_model AS "specificationModel",
+		a.price AS "price",
+		a.num AS "num",
+		a.count AS "count"
+	</sql>
+	
+	<sql id="wyRepairBudgetMaterielJoins">
+	</sql>
+    
+	<select id="get" resultType="WyRepairBudgetMateriel">
+		SELECT 
+			<include refid="wyRepairBudgetMaterielColumns"/>
+		FROM wy_repair_budget_materiel a
+		<include refid="wyRepairBudgetMaterielJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="WyRepairBudgetMateriel">
+		SELECT 
+			<include refid="wyRepairBudgetMaterielColumns"/>
+		FROM wy_repair_budget_materiel a
+		<include refid="wyRepairBudgetMaterielJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="WyRepairBudgetMateriel">
+		SELECT 
+			<include refid="wyRepairBudgetMaterielColumns"/>
+		FROM wy_repair_budget_materiel a
+		<include refid="wyRepairBudgetMaterielJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO wy_repair_budget_materiel(
+			id,
+			repair_id,
+			create_date,
+			update_date,
+			del_flag,
+			material_no,
+			material_name,
+			specification_model,
+			price,
+			num,
+			count
+		) VALUES (
+			#{id},
+			#{repairId},
+			#{createDate},
+			#{updateDate},
+			#{delFlag},
+			#{materialNo},
+			#{materialName},
+			#{specificationModel},
+			#{price},
+			#{num},
+			#{count}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE wy_repair_budget_materiel SET 	
+			repair_id = #{repairId},
+			update_date = #{updateDate},
+			material_no = #{materialNo},
+			material_name = #{materialName},
+			specification_model = #{specificationModel},
+			price = #{price},
+			num = #{num},
+			count = #{count}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="delete">
+		UPDATE wy_repair_budget_materiel SET 
+			del_flag = #{DEL_FLAG_DELETE}
+		WHERE id = #{id}
+	</update>
+	
+</mapper>

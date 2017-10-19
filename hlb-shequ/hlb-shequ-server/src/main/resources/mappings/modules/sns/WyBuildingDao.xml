@@ -1,0 +1,131 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.haolinbang.modules.sns.dao.WyBuildingDao">
+    
+	<sql id="wyBuildingColumns">
+		a.building_id AS "buildingId",
+		a.source AS "source",
+		a.wyid AS "wyid",
+		a.province AS "province",
+		a.city AS "city",
+		a.area AS "area",
+		a.address AS "address",
+		a.wybh AS "wybh",
+		a.wymc AS "wymc"
+	</sql>
+	
+	<sql id="wyBuildingJoins">
+	</sql>
+    
+	<select id="get" resultType="WyBuilding">
+		SELECT 
+			<include refid="wyBuildingColumns"/>
+		FROM wy_building a
+		<include refid="wyBuildingJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="WyBuilding">
+		SELECT 
+			<include refid="wyBuildingColumns"/>
+		FROM wy_building a
+		<include refid="wyBuildingJoins"/>
+		<where>
+			
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="WyBuilding">
+		SELECT 
+			<include refid="wyBuildingColumns"/>
+		FROM wy_building a
+		<include refid="wyBuildingJoins"/>
+		<where>
+			
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert" useGeneratedKeys="true" keyProperty="building_id">
+		INSERT INTO wy_building(
+			source,
+			wyid,
+			province,
+			city,
+			area,
+			address,
+			wybh,
+			wymc
+		) VALUES (
+			#{source},
+			#{wyid},
+			#{province},
+			#{city},
+			#{area},
+			#{address},
+			#{wybh},
+			#{wymc}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE wy_building SET 	
+			building_id = #{buildingId},
+			source = #{source},
+			wyid = #{wyid},
+			province = #{province},
+			city = #{city},
+			area = #{area},
+			address = #{address},
+			wybh = #{wybh},
+			wymc = #{wymc}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="delete">
+		DELETE FROM wy_building
+		WHERE id = #{id}
+	</update>
+	
+	<update id="deleteAll">
+		DELETE FROM wy_building
+		WHERE 1=1
+	</update>
+	
+	<select id="getBySearchName" resultType="WyBuilding">
+		SELECT * FROM wy_building a WHERE a.wymc like '%${_parameter}%'
+	</select>
+	
+	<select id="getByBuildingId" resultType="WyBuilding">
+		SELECT * FROM wy_building a WHERE a.building_id = #{_parameter}
+	</select>
+	
+	<select id="findWyBuilding" resultType="WyBuilding">
+		SELECT * FROM wy_building a 
+		<trim prefix="WHERE" suffixOverrides="AND">
+			<if test="source != null and source != ''">
+				a.source = #{source} and
+			</if>
+			<if test="wyid != null and wyid != ''">
+				a.wyid = #{wyid} and 
+			</if>
+			<if test="wymc != null and wymc != ''">
+				a.wymc = LIKE CONCAT('%',#{wymc},'%') 
+			</if>
+		</trim>
+	</select>
+	
+</mapper>

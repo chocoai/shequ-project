@@ -1,0 +1,152 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.haolinbang.modules.sns.dao.WyComplainDao">
+    
+	<sql id="wyComplainColumns">
+		a.id AS "id",
+		a.complain_area AS "complainArea",
+		a.phone AS "phone",
+		a.content AS "content",
+		a.contentdetail AS "contentdetail",
+		a.imgurl AS "imgurl",
+		a.memberid AS "memberid",
+		a.createtime AS "createtime",
+		a.updatetime AS "updatetime",
+		a.proc_ins_id AS "procInsId",
+		a.roomid AS "roomid",
+		a.applyname AS "applyname",
+		a.`status` AS "status",
+		a.source AS "source",
+		a.wyid AS "wyid",
+		a.group_id AS "groupId"
+	</sql>
+	
+	<sql id="wyComplainJoins">
+	</sql>
+    
+	<select id="get" resultType="WyComplain">
+		SELECT 
+			<include refid="wyComplainColumns"/>
+		FROM wy_complain a
+		<include refid="wyComplainJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="WyComplain">
+		SELECT 
+			<include refid="wyComplainColumns"/>
+		FROM wy_complain a
+		<include refid="wyComplainJoins"/>
+		<where>
+			
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="WyComplain">
+		SELECT 
+			<include refid="wyComplainColumns"/>
+		FROM wy_complain a
+		<include refid="wyComplainJoins"/>
+		<where>
+			
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert" useGeneratedKeys="true" keyProperty="id">
+		INSERT INTO wy_complain(
+			complain_area,
+			phone,
+			content,
+			contentdetail,
+			imgurl,
+			memberid,
+			createtime,
+			updatetime,
+			proc_ins_id,
+			roomid,
+			applyname,
+			source,
+			group_id,
+			wyid
+		) VALUES (
+			#{complainArea},
+			#{phone},
+			#{content},
+			#{contentdetail},
+			#{imgurl},
+			#{memberid},
+			#{createtime},
+			#{updatetime},
+			#{procInsId},
+			#{roomid},
+			#{applyname},
+			#{source},
+			#{groupId},
+			#{wyid}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE wy_complain SET 	
+			complain_area = #{complainArea},
+			phone = #{phone},
+			content = #{content},
+			contentdetail = #{contentdetail},
+			imgurl = #{imgurl},
+			memberid = #{memberid},
+			createtime = #{createtime},
+			updatetime = #{updatetime},
+			proc_ins_id = #{procInsId},
+			roomid = #{roomid},
+			applyname = #{applyname},
+			source = #{source},
+			group_id = #{groupId},
+			wyid = #{wyid}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="delete">
+		DELETE FROM wy_complain
+		WHERE id = #{id}
+	</update>
+	
+	
+	<select id="getWyComplainByMemberId" resultType="WyComplain">
+		SELECT 
+			<include refid="wyComplainColumns"/>
+		FROM wy_complain a
+		<include refid="wyComplainJoins"/>
+		WHERE a.memberid = #{mid}
+	</select>
+	
+	<select id="getWyComplainsByProcInsIds" resultType="WyComplain">
+		SELECT
+		<include refid="wyComplainColumns" />
+		FROM wy_complain a
+		<include refid="wyComplainJoins" />
+		WHERE a.proc_ins_id IN
+		<foreach item="item" index="index" collection="procInsIdList" open="(" separator="," close=")">
+			#{item}
+		</foreach>
+	</select>
+	
+	<update id="updateComplainstatus">
+		UPDATE wy_complain SET
+		`status` = #{status}
+		WHERE proc_ins_id = #{procInsId}
+	</update>
+</mapper>

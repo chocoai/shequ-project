@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.haolinbang.modules.sys.dao.AppUserScopeDao">
+    
+	<sql id="appUserScopeColumns">
+		a.user_id AS "userId",
+		a.type AS "type",
+		a.group_ids AS "groupIds",
+		a.group_id AS "groupId",
+		a.parent_group_id AS "parentGroupId"
+	</sql>
+	
+	<sql id="appUserScopeJoins">
+		
+	</sql>
+    
+	<select id="get" resultType="AppUserScope">
+		SELECT 
+			<include refid="appUserScopeColumns"/>
+		FROM app_user_scope a
+		<include refid="appUserScopeJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="AppUserScope">
+		SELECT 
+			<include refid="appUserScopeColumns"/>
+		FROM app_user_scope a
+		<include refid="appUserScopeJoins"/>
+		<where>
+			
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="AppUserScope">
+		SELECT 
+			<include refid="appUserScopeColumns"/>
+		FROM app_user_scope a
+		<include refid="appUserScopeJoins"/>
+		<where>
+			
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO app_user_scope(
+			user_id,
+			type,
+			group_ids,
+			group_id,
+			parent_group_id
+		) VALUES (
+			#{userId},
+			#{type},
+			#{groupIds},
+			#{groupId},
+			#{parentGroupId}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE app_user_scope SET 	
+			user_id = #{userId},
+			type = #{type},
+			group_ids = #{groupIds},
+			group_id = #{groupId},
+			parent_group_id = #{parentGroupId}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="delete">
+		DELETE FROM app_user_scope
+		WHERE id = #{id}
+	</update>
+	
+	<select id="getAppUserScopeByUid" resultType="AppUserScope">
+		SELECT 
+			<include refid="appUserScopeColumns"/>
+		FROM app_user_scope a
+		<include refid="appUserScopeJoins"/>
+		WHERE a.user_id = #{uid}
+	</select>
+	
+	<update id="deleteByUid">
+		DELETE FROM app_user_scope
+		WHERE user_id = #{uid}
+	</update>
+	
+</mapper>

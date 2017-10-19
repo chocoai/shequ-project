@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.haolinbang.modules.sns.dao.PropertyDao">
+    
+	<select id="get" resultType="Property">
+		select
+			* 
+		from property 
+		where WYID = #{WYID}
+	</select>
+	
+	<select id="findList" resultType="Property">
+		select 
+			*
+		from property 
+		<trim prefix="WHERE" suffixOverrides="AND">
+			<if test="WYID != null and WYID != ''">
+				WYID = #{WYID} 
+			</if>
+			<if test="WYNo != null and WYNo != ''">
+				WYNo = #{WYNo} 
+			</if>
+			<if test="WYName != null and WYName != ''">
+				WYName = #{WYName}
+			</if>
+			<if test="source != null and source != ''">
+				source = #{source}
+			</if>
+			<if test="districtId != null and districtId != ''">
+				districtId = #{districtId}
+			</if>
+		</trim>
+		order by createtime desc
+	</select>
+	
+	<select id="findAllList" resultType="Property">
+		select 
+			* 
+		from property 
+		order by createtime desc
+	</select>
+	
+	<insert id="insert">
+		insert into property
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="WYID != null">
+				WYID, 
+			</if>
+			<if test="WYNo != null">
+				WYNo, 
+			</if>
+			<if test="WYName != null">
+				WYName,
+			</if>
+			<if test="source != null"> 
+				source, 
+			</if>
+			<if test="districtId != null">
+				districtId, 
+			</if>
+		</trim>
+		 VALUES 
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="WYID != null">
+				#{WYID},  
+			</if>
+			<if test="WYNo != null">
+				#{WYNo}, 
+			</if>
+			<if test="WYName != null">
+				#{WYName}, 
+			</if>
+			<if test="source != null">
+				#{source},  
+			</if>
+			<if test="districtId != null">
+				#{districtId}, 
+			</if>
+		</trim> 	
+	</insert>
+	
+	<update id="update">
+		update property 
+		<set>
+			<if test="WYID != null"> 
+				WYID = #{WYID},
+			</if>
+			<if test="WYNo != null">
+				WYNo = #{WYNo}, 
+			</if>
+			<if test="WYName != null">
+				WYName = #{WYName}, 
+			</if>
+			<if test="source != null">
+				source = #{source},
+			</if>
+			<if test="districtId != null"> 
+				districtId = #{districtId},
+			</if>
+		</set>
+		where districtId = #{districtId}
+	</update>
+	
+	<update id="delete">
+		delete from property
+		<trim prefix="WHERE" suffixOverrides="AND">
+			<if test="districtId != null">
+				districtId = #{districtId}
+			</if>
+		</trim>
+	</update>
+	
+</mapper>

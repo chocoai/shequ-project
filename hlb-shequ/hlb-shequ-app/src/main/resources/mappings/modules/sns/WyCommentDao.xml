@@ -1,0 +1,286 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.haolinbang.modules.sns.dao.WyCommentDao">
+    
+	<sql id="wyCommentColumns">
+		a.id AS "id",
+		a.biz_type AS "bizType",
+		a.relation_id AS "relationId",
+		a.publisher AS "publisher",
+		a.publisher_relation AS "publisherRelation",
+		a.be_reply AS "beReply",
+		a.comment AS "comment",
+		a.create_date AS "createDate",
+		a.update_date AS "updateDate",
+		a.audit AS "audit",
+		pub.member_id AS "publisherMember.memberId",
+		pub.member_name AS "publisherMember.memberName",
+		re.member_id AS "relationMember.memberId",
+		re.member_name AS "relationMember.memberName"
+	</sql>
+	
+	<sql id="wyCommentJoins">
+		left join wy_member pub on pub.member_id=a.publisher
+		left join wy_member re on re.member_id=a.publisher_relation
+	</sql>
+    
+	<select id="get" resultType="WyComment">
+		SELECT 
+			<include refid="wyCommentColumns"/>
+		FROM wy_comment a
+		<include refid="wyCommentJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="WyComment">
+		SELECT
+			<include refid="wyCommentColumns"/>
+			<if test="bizType == null or bizType == ''">
+				FROM (wy_comment a)
+				<include refid="wyCommentJoins"/>
+				<where>	
+					<if test="relationId !=null and relationId !=''">
+						a.comment_id = #{relationId}
+					</if>
+					<if test="relationId == null or relationId == ''">
+						1 != 1 
+					</if>
+					<if test="publisherMember != null and publisherMember.memberName !=null and publisherMember.memberName != ''">
+						AND pub.member_name LIKE CONCAT('%',#{publisherMember.memberName},'%')
+					</if>
+					<if test="beginDate != null and beginDate != ''">
+						AND a.create_date &gt; #{beginDate,jdbcType=VARCHAR} 
+					</if>
+					<if test="endDate != null and endDate != ''">
+						AND a.create_date &lt; #{endDate,jdbcType=VARCHAR} 
+					</if>
+						
+				</where>
+			</if>
+			<if test="bizType == 'house_rent'">
+				,b.title AS "title1"
+				FROM (wy_comment a, wy_house_rent b)
+				<include refid="wyCommentJoins"/>
+				<where>	
+					a.biz_type = #{bizType} and b.source = #{source}
+					<if test="wyid !=null and wyid !=''">
+						AND b.wyid = #{wyid}
+					</if>
+					<if test="wyids !=null and wyids !=''">
+						AND b.wyid IN (${wyids})
+					</if>
+					and a.relation_id = b.id
+					<if test="publisherMember != null and publisherMember.memberName !=null and publisherMember.memberName != ''">
+						AND pub.member_name LIKE CONCAT('%',#{publisherMember.memberName},'%')
+					</if>
+					<if test="title != null and title != ''">
+						AND b.title LIKE CONCAT('%',#{title},'%')
+					</if>
+					<if test="beginDate != null and beginDate != ''">
+						AND a.create_date &gt; #{beginDate,jdbcType=VARCHAR} 
+					</if>
+					<if test="endDate != null and endDate != ''">
+						AND a.create_date &lt; #{endDate,jdbcType=VARCHAR} 
+					</if>	
+				</where>
+			</if>
+			<if test="bizType == 'flea_market'">
+				,c.goods_name AS "title2"
+				FROM (wy_comment a, wy_flea_market c)
+				<include refid="wyCommentJoins"/>
+				<where>	
+					a.biz_type = #{bizType} and c.source = #{source}
+					<if test="wyid !=null and wyid !=''">
+						AND c.wyid = #{wyid}
+					</if>
+					<if test="wyids !=null and wyids !=''">
+						AND c.wyid IN (${wyids})
+					</if>
+					and a.relation_id = c.id
+					<if test="publisherMember != null and publisherMember.memberName !=null and publisherMember.memberName != ''">
+						AND pub.member_name LIKE CONCAT('%',#{publisherMember.memberName},'%')
+					</if>
+					<if test="title != null and title != ''">
+						AND c.goods_name LIKE CONCAT('%',#{title},'%')
+					</if>
+					<if test="beginDate != null and beginDate != ''">
+						AND a.create_date &gt; #{beginDate,jdbcType=VARCHAR} 
+					</if>
+					<if test="endDate != null and endDate != ''">
+						AND a.create_date &lt; #{endDate,jdbcType=VARCHAR} 
+					</if>			
+				</where>
+			</if>
+			<if test="bizType == 'public_repair_process'">
+				,d.content AS "title3"
+				FROM (wy_comment a, wy_repair d, wy_room f)
+				<include refid="wyCommentJoins"/>
+				<where>	
+					a.biz_type = #{bizType} and d.repairType = 0 and a.relation_id = d.id
+					and d.roomId = f.roomId and f.source = #{source}
+					<if test="wyid !=null and wyid !=''">
+						AND f.WYID = #{wyid}
+					</if>
+					<if test="wyids !=null and wyids !=''">
+						AND f.WYID IN (${wyids})
+					</if>
+					<if test="publisherMember != null and publisherMember.memberName !=null and publisherMember.memberName != ''">
+						AND pub.member_name LIKE CONCAT('%',#{publisherMember.memberName},'%')
+					</if>
+					<if test="title != null and title != ''">
+						AND d.content LIKE CONCAT('%',#{title},'%')
+					</if>
+					<if test="beginDate != null and beginDate != ''">
+						AND a.create_date &gt; #{beginDate,jdbcType=VARCHAR} 
+					</if>
+					<if test="endDate != null and endDate != ''">
+						AND a.create_date &lt; #{endDate,jdbcType=VARCHAR} 
+					</if>		
+				</where>
+			</if>
+			<if test="bizType == 'biz_private_repair'">
+				,d.content AS "title3"
+				FROM (wy_comment a, wy_repair d, wy_room f)
+				<include refid="wyCommentJoins"/>
+				<where>	
+					a.biz_type = #{bizType} and d.repairType = 1 and a.relation_id = d.id
+					and d.roomId = f.roomId and f.source = #{source}
+					<if test="wyid !=null and wyid !=''">
+						AND f.WYID = #{wyid}
+					</if>
+					<if test="wyids !=null and wyids !=''">
+						AND f.WYID IN (${wyids})
+					</if>
+					<if test="publisherMember != null and publisherMember.memberName !=null and publisherMember.memberName != ''">
+						AND pub.member_name LIKE CONCAT('%',#{publisherMember.memberName},'%')
+					</if>
+					<if test="title != null and title != ''">
+						AND d.content LIKE CONCAT('%',#{title},'%')
+					</if>
+					<if test="beginDate != null and beginDate != ''">
+						AND a.create_date &gt; #{beginDate,jdbcType=VARCHAR} 
+					</if>
+					<if test="endDate != null and endDate != ''">
+						AND a.create_date &lt; #{endDate,jdbcType=VARCHAR} 
+					</if>			
+				</where>
+			</if>
+			<if test="bizType == 'complaint_process'">
+				,e.content AS "title4"
+				FROM (wy_comment a, wy_complain e, wy_room f)
+				<include refid="wyCommentJoins"/>
+				<where>	
+					a.biz_type = #{bizType} and a.relation_id = e.id
+					and e.roomId = f.roomId and f.source = #{source}
+					<if test="wyid !=null and wyid !=''">
+						AND f.WYID = #{wyid}
+					</if>
+					<if test="wyids !=null and wyids !=''">
+						AND f.WYID IN (${wyids})
+					</if>
+					<if test="publisherMember != null and publisherMember.memberName !=null and publisherMember.memberName != ''">
+						AND pub.member_name LIKE CONCAT('%',#{publisherMember.memberName},'%')
+					</if>
+					<if test="title != null and title != ''">
+						AND e.content LIKE CONCAT('%',#{title},'%')
+					</if>
+					<if test="beginDate != null and beginDate != ''">
+						AND a.create_date &gt; #{beginDate,jdbcType=VARCHAR} 
+					</if>
+					<if test="endDate != null and endDate != ''">
+						AND a.create_date &lt; #{endDate,jdbcType=VARCHAR} 
+					</if>		
+				</where>
+			</if>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.create_date DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="WyComment">
+		SELECT 
+			<include refid="wyCommentColumns"/>
+		FROM wy_comment a
+		<include refid="wyCommentJoins"/>
+		<where>
+			
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO wy_comment(
+			biz_type,
+			relation_id,
+			publisher,
+			publisher_relation,
+			be_reply,
+			comment,
+			create_date,
+			update_date,
+			audit
+		) VALUES (
+			#{bizType},
+			#{relationId},
+			#{publisher},
+			#{publisherRelation},
+			#{beReply},
+			#{comment},
+			#{createDate},
+			#{updateDate},
+			#{audit}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE wy_comment SET 	
+			biz_type = #{bizType},
+			relation_id = #{relationId},
+			publisher = #{publisher},
+			publisher_relation = #{publisherRelation},
+			be_reply = #{beReply},
+			comment = #{comment},
+			update_date = #{updateDate},
+			audit = #{audit}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="delete">
+		DELETE FROM wy_comment
+		WHERE id = #{id}
+	</update>
+	
+	<update id="audit">
+		UPDATE wy_comment SET audit = 0
+		WHERE id = #{id}
+	</update>
+	
+	<update id="audit1">
+		UPDATE wy_comment SET audit = 1
+		WHERE id = #{id}
+	</update>
+	
+	<select id="getDetailByCommentId" resultType="WyComment">
+		SELECT 
+			<include refid="wyCommentColumns"/>
+		FROM wy_comment a
+		<include refid="wyCommentJoins"/>
+		<where>
+			a.relation_id = #{id} 
+		</where>	
+		ORDER BY a.update_date DESC	
+	</select>
+	
+</mapper>

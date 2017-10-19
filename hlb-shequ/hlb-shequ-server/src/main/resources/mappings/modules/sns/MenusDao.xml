@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.haolinbang.modules.sns.dao.MenusDao">
+    
+	<select id="getMenusList" resultType="Menus">
+		SELECT
+			*
+		FROM
+			wy_menus t
+		WHERE
+			t.`isShow` = '1' and t.type = #{type}
+		ORDER BY t.`sort`
+	</select>	
+</mapper>

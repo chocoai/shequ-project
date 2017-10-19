@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.haolinbang.modules.sns.dao.WyMenusDao">
+    
+	<sql id="wyMenusColumns">
+		a.id AS "id",
+		a.parentids AS "parentids",
+		a.name AS "name",
+		a.href AS "href",
+		a.icon AS "icon",
+		a.sort AS "sort",
+		a.isshow AS "isshow",
+		a.type AS "type"
+		a.background_color AS "backgroundColor"
+	</sql>
+	
+	<sql id="wyMenusJoins">
+	</sql>
+    
+	<select id="get" resultType="WyMenus">
+		SELECT 
+			<include refid="wyMenusColumns"/>
+		FROM wy_menus a
+		<include refid="wyMenusJoins"/>
+		WHERE a.id = #{id} 
+		order by sort asc
+	</select>
+	
+	<select id="findList" resultType="WyMenus">
+		SELECT 
+			<include refid="wyMenusColumns"/>
+		FROM wy_menus a
+		<include refid="wyMenusJoins"/>
+		<where>
+			<if test="type!=null">a.type = #{type}</if>
+			<if test="name != null and name != ''">
+				AND a.name LIKE 
+					<if test="dbName == 'oracle'">'%'||#{name}||'%'</if>
+					<if test="dbName == 'mssql'">'%'+#{name}+'%'</if>
+					<if test="dbName == 'mysql'">concat('%',#{name},'%')</if>
+			</if>
+		</where>
+		order by sort asc
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="WyMenus">
+		SELECT 
+			<include refid="wyMenusColumns"/>
+		FROM wy_menus a
+		<include refid="wyMenusJoins"/>
+		<where>
+			a.type = #{type}
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO wy_menus(
+			id,
+			parentids,
+			name,
+			href,
+			icon,
+			sort,
+			isshow,
+			type,
+			background_color
+		) VALUES (
+			#{id},
+			#{parentids},
+			#{name},
+			#{href},
+			#{icon},
+			#{sort},
+			#{isshow},
+			#{type},
+			#{backgroundColor}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE wy_menus SET 	
+			parentids = #{parentids},
+			name = #{name},
+			href = #{href},
+			icon = #{icon},
+			sort = #{sort},
+			isshow = #{isshow},
+			type = #{type}
+			background_color = #{backgroundColor}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="delete">
+		DELETE FROM wy_menus
+		WHERE id = #{id}
+	</update>
+	
+</mapper>

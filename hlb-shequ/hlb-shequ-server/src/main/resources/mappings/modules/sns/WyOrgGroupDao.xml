@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.haolinbang.modules.sns.dao.WyOrgGroupDao">
+    
+	<sql id="wyOrgGroupColumns">
+		a.group_id AS "groupId",
+		a.parent_id AS "parentId",
+		a.group_type AS "groupType",
+		a.group_no AS "groupNo",
+		a.group_name AS "groupName"
+	</sql>
+	
+	<sql id="wyOrgGroupJoins">
+	</sql>
+    
+	<select id="get" resultType="WyOrgGroup">
+		SELECT 
+			<include refid="wyOrgGroupColumns"/>
+		FROM wy_org_group a
+		<include refid="wyOrgGroupJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="WyOrgGroup">
+		SELECT 
+			<include refid="wyOrgGroupColumns"/>
+		FROM wy_org_group a
+		<include refid="wyOrgGroupJoins"/>
+		<where>
+			
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="WyOrgGroup">
+		SELECT 
+			<include refid="wyOrgGroupColumns"/>
+		FROM wy_org_group a
+		<include refid="wyOrgGroupJoins"/>
+		<where>
+			
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO wy_org_group(
+			group_id,
+			parent_id,
+			group_type,
+			group_no,
+			group_name
+		) VALUES (
+			#{groupId},
+			#{parentId},
+			#{groupType},
+			#{groupNo},
+			#{groupName}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE wy_org_group SET 	
+			group_id = #{groupId},
+			parent_id = #{parentId},
+			group_type = #{groupType},
+			group_no = #{groupNo},
+			group_name = #{groupName}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="delete">
+		DELETE FROM wy_org_group
+		WHERE id = #{id}
+	</update>
+	
+	<select id="getWyOrgGroupByStaffId" resultType="WyOrgGroup">
+		SELECT 
+			<include refid="wyOrgGroupColumns"/>
+		FROM wy_org_group a,wy_org_staff os
+		<include refid="wyOrgGroupJoins"/>
+		WHERE os.group_id=a.group_id
+		AND   os.staff_id = #{staffid}
+	</select>
+	
+	<select id="getWyOrgGroupListByPid" resultType="WyOrgGroup">
+		SELECT 
+			<include refid="wyOrgGroupColumns"/>
+		FROM wy_org_group a
+		<include refid="wyOrgGroupJoins"/>
+		WHERE a.parent_id = #{pid}
+	</select>
+	
+</mapper>

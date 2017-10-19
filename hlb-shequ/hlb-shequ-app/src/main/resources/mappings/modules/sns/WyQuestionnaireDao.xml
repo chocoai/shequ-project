@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.haolinbang.modules.sns.dao.WyQuestionnaireDao">
+    
+	<sql id="wyQuestionnaireColumns">
+		a.questionnaireid AS "questionnaireid",
+		a.title AS "title",
+		a.explain AS "explain",
+		a.sortval AS "sortval",
+		a.status AS "status",
+		a.createtime AS "createtime",
+		a.updatetime AS "updatetime",
+		a.source AS "source",
+		a.groupid AS "groupid",
+		a.creater AS "creater"
+	</sql>
+	
+	<sql id="wyQuestionnaireJoins">
+	</sql>
+    
+	<select id="get" resultType="WyQuestionnaire">
+		SELECT 
+			<include refid="wyQuestionnaireColumns"/>
+		FROM wy_questionnaire a
+		<include refid="wyQuestionnaireJoins"/>
+		WHERE a.questionnaireid = #{questionnaireid}
+	</select>
+	
+	<select id="findList" resultType="WyQuestionnaire">
+		SELECT 
+			<include refid="wyQuestionnaireColumns"/>
+		FROM wy_questionnaire a
+		<include refid="wyQuestionnaireJoins"/>
+		<trim prefix="WHERE" suffixOverrides="AND">
+			<if test="source!=null and source!=''">
+				a.source = #{source} and
+			</if>
+			<if test="groupid!=null and groupid!=''">
+				a.groupid = #{groupid} and
+			</if>
+		</trim>
+			ORDER BY a.sortval
+		<!-- <choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose> -->
+	</select>
+	
+	<select id="findAllList" resultType="WyQuestionnaire">
+		SELECT 
+			<include refid="wyQuestionnaireColumns"/>
+		FROM wy_questionnaire a
+		<include refid="wyQuestionnaireJoins"/>
+		<where>
+			
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert" useGeneratedKeys="true" keyProperty="questionnaireid">
+		INSERT INTO wy_questionnaire(
+			title,
+			`explain`,
+			sortval,
+			status,
+			createtime,
+			updatetime,
+			source,
+			groupid,
+			creater
+		) VALUES (
+			#{title},
+			#{explain},
+			#{sortval},
+			#{status},
+			#{createtime},
+			#{updatetime},
+			#{source},
+			#{groupid},
+			#{creater}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE wy_questionnaire SET 	
+			questionnaireid = #{questionnaireid},
+			title = #{title},
+			`explain` = #{explain},
+			sortval = #{sortval},
+			status = #{status},
+			createtime = #{createtime},
+			updatetime = #{updatetime},
+			source = #{source},
+			groupid = #{groupid},
+			creater = #{creater}
+		WHERE questionnaireid = #{questionnaireid}
+	</update>
+	
+	<!-- <update id="delete">
+		DELETE FROM wy_questionnaire
+		WHERE questionnaireid = #{questionnaireid}
+	</update> -->
+	
+	<update id="delete">
+		DELETE FROM wy_questionnaire
+		WHERE questionnaireid = #{questionnaireid}
+	</update>
+	
+</mapper>

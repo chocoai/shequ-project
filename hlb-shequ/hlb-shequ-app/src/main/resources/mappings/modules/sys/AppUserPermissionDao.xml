@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.haolinbang.modules.sys.dao.AppUserPermissionDao">
+    
+	<sql id="appUserPermissionColumns">
+		a.user_id AS "user.id",
+		a.menu_id AS "menuId",
+		u1.name AS "user.name",
+		a.user_id AS "userId"
+	</sql>
+	
+	<sql id="appUserPermissionJoins">
+		LEFT JOIN sys_user u1 ON u1.id = a.user_id
+	</sql>
+    
+	<select id="get" resultType="AppUserPermission">
+		SELECT 
+			<include refid="appUserPermissionColumns"/>
+		FROM app_user_permission a
+		<include refid="appUserPermissionJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="AppUserPermission">
+		SELECT 
+			<include refid="appUserPermissionColumns"/>
+		FROM app_user_permission a
+		<include refid="appUserPermissionJoins"/>
+		<where>
+			<if test="userId !=null and userId !=''">
+				a.user_id = #{userId}
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="AppUserPermission">
+		SELECT 
+			<include refid="appUserPermissionColumns"/>
+		FROM app_user_permission a
+		<include refid="appUserPermissionJoins"/>
+		<where>
+			<if test="userId !=null and userId !=''">
+				a.user_id = #{userId}
+			</if>
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO app_user_permission(
+			user_id,
+			menu_id
+		) VALUES (
+			#{userId},
+			#{menuId}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE app_user_permission SET 	
+			user_id = #{userId},
+			menu_id = #{menuId}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="delete">
+		DELETE FROM app_user_permission
+		WHERE id = #{id}
+	</update>
+	
+	<update id="deleteByPermissions">
+		DELETE FROM app_user_permission
+		WHERE user_id = #{uid}
+	</update>
+	
+	<select id="findByUserId" resultType="com.haolinbang.modules.sys.entity.Menu">		 
+		SELECT
+			a.id AS "id",
+			a.parent_id AS "parent.id",
+			a.parent_ids AS "parentIds",
+			a. NAME AS "name",
+			a.sort AS "sort",
+			a.href AS "href",
+			a.target AS "target",
+			a.icon AS "icon",
+			a.color AS "color",
+			a.is_show AS "isShow",
+			a.permission AS "permission",
+			a.sys_type AS "sysType",
+			a.create_by AS "createBy.id",
+			a.create_date AS "createDate",
+			a.update_by AS "updateBy.id",
+			a.update_date AS "updateDate",
+			a.remarks AS "remarks",
+			a.del_flag AS "delFlag"
+		FROM
+			app_menu a
+		JOIN app_user_permission p ON a.id = p.menu_id	
+		WHERE p.user_id = #{id}
+	</select>
+	
+</mapper>

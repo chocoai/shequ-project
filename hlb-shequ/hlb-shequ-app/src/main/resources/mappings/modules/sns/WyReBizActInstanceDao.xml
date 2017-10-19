@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.haolinbang.modules.sns.dao.WyReBizActInstanceDao">
+    
+	<sql id="wyReBizActInstanceColumns">
+		a.id AS "id",
+		a.relation_id AS "relationId",
+		a.source AS "source",
+		a.group_id AS "groupId",
+		a.type_id AS "typeId",
+		a.create_by AS "createBy.id",
+		a.create_date AS "createDate",
+		a.update_by AS "updateBy.id",
+		a.update_date AS "updateDate",
+		a.remarks AS "remarks",
+		a.del_flag AS "delFlag"
+	</sql>
+	
+	<sql id="wyReBizActInstanceJoins">
+	</sql>
+    
+	<select id="get" resultType="WyReBizActInstance">
+		SELECT 
+			<include refid="wyReBizActInstanceColumns"/>
+		FROM wy_re_biz_act_instance a
+		<include refid="wyReBizActInstanceJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="WyReBizActInstance">
+		SELECT 
+			<include refid="wyReBizActInstanceColumns"/>
+		FROM wy_re_biz_act_instance a
+		<include refid="wyReBizActInstanceJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="WyReBizActInstance">
+		SELECT 
+			<include refid="wyReBizActInstanceColumns"/>
+		FROM wy_re_biz_act_instance a
+		<include refid="wyReBizActInstanceJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO wy_re_biz_act_instance(
+			id,
+			relation_id,
+			source,
+			group_id,
+			type_id,
+			create_by,
+			create_date,
+			update_by,
+			update_date,
+			remarks,
+			del_flag
+		) VALUES (
+			#{id},
+			#{relationId},
+			#{source},
+			#{groupId},
+			#{typeId},
+			#{createBy.id},
+			#{createDate},
+			#{updateBy.id},
+			#{updateDate},
+			#{remarks},
+			#{delFlag}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE wy_re_biz_act_instance SET 	
+			relation_id = #{relationId},
+			source = #{source},
+			group_id = #{groupId},
+			type_id = #{typeId},
+			update_by = #{updateBy.id},
+			update_date = #{updateDate},
+			remarks = #{remarks}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="delete">
+		UPDATE wy_re_biz_act_instance SET 
+			del_flag = #{DEL_FLAG_DELETE}
+		WHERE id = #{id}
+	</update>
+	
+</mapper>

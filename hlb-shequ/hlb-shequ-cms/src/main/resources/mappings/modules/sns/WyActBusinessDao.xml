@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.haolinbang.modules.sns.dao.WyActBusinessDao">
+    
+	<sql id="wyActBusinessColumns">
+		a.id AS "id",
+		a.proc_def_key AS "procDefKey",
+		a.proc_def_name AS "procDefName",
+		a.proc_def_id AS "procDefId",
+		a.biz_key AS "bizKey",
+		a.biz_name AS "bizName",
+		a.create_by AS "createBy.id",
+		a.create_date AS "createDate",
+		a.update_by AS "updateBy.id",
+		a.update_date AS "updateDate",
+		a.remarks AS "remarks",
+		a.del_flag AS "delFlag"
+	</sql>
+	
+	<sql id="wyActBusinessJoins">
+	</sql>
+    
+	<select id="get" resultType="WyActBusiness">
+		SELECT 
+			<include refid="wyActBusinessColumns"/>
+		FROM wy_act_business a
+		<include refid="wyActBusinessJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="WyActBusiness">
+		SELECT 
+			<include refid="wyActBusinessColumns"/>
+		FROM wy_act_business a
+		<include refid="wyActBusinessJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="WyActBusiness">
+		SELECT 
+			<include refid="wyActBusinessColumns"/>
+		FROM wy_act_business a
+		<include refid="wyActBusinessJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert" useGeneratedKeys="true" keyProperty="id">
+		INSERT INTO wy_act_business(
+			proc_def_key,
+			proc_def_name,
+			proc_def_id,
+			biz_key,
+			biz_name,
+			create_by,
+			create_date,
+			update_by,
+			update_date,
+			remarks,
+			del_flag
+		) VALUES (
+			#{procDefKey},
+			#{procDefName},
+			#{procDefId},
+			#{bizKey},
+			#{bizName},
+			#{createBy.id},
+			#{createDate},
+			#{updateBy.id},
+			#{updateDate},
+			#{remarks},
+			#{delFlag}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE wy_act_business SET 	
+			proc_def_key = #{procDefKey},
+			proc_def_name = #{procDefName},
+			proc_def_id = #{procDefId},
+			biz_key = #{bizKey},
+			biz_name = #{bizName},
+			update_by = #{updateBy.id},
+			update_date = #{updateDate},
+			remarks = #{remarks}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="delete">
+		UPDATE wy_act_business SET 
+			del_flag = #{DEL_FLAG_DELETE}
+		WHERE id = #{id}
+	</update>
+	
+</mapper>

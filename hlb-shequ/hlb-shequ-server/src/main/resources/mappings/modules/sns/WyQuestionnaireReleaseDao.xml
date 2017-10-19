@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.haolinbang.modules.sns.dao.WyQuestionnaireReleaseDao">
+    
+	<sql id="wyQuestionnaireReleaseColumns">
+		a.release_id AS "releaseId",
+		a.questionnaireid AS "questionnaireid",
+		a.num AS "num",
+		a.runstatus AS "runstatus",
+		a.endtime AS "endtime",
+		a.createtime AS "createtime"
+	</sql>
+	
+	<sql id="wyQuestionnaireReleaseJoins">
+	</sql>
+    
+	<select id="get" resultType="WyQuestionnaireRelease">
+		SELECT 
+			<include refid="wyQuestionnaireReleaseColumns"/>
+		FROM wy_questionnaire_release a
+		<include refid="wyQuestionnaireReleaseJoins"/>
+		WHERE a.release_id = #{releaseId}
+	</select>
+	
+	<select id="findList" resultType="WyQuestionnaireRelease">
+		SELECT 
+			<include refid="wyQuestionnaireReleaseColumns"/>
+			,b.title AS "title"
+		FROM wy_questionnaire_release a, wy_questionnaire b
+		<include refid="wyQuestionnaireReleaseJoins"/>
+		<where>
+			a.questionnaireid = b.questionnaireid
+		</where>
+		order by createtime desc
+	</select>
+	
+	<select id="findAllList" resultType="WyQuestionnaireRelease">
+		SELECT 
+			<include refid="wyQuestionnaireReleaseColumns"/>
+		FROM wy_questionnaire_release a
+		<include refid="wyQuestionnaireReleaseJoins"/>
+		<where>
+			
+		</where>		
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO wy_questionnaire_release(
+			release_id,
+			questionnaireid,
+			num,
+			runstatus,
+			endtime,
+			createtime
+		) VALUES (
+			#{releaseId},
+			#{questionnaireid},
+			#{num},
+			#{runstatus},
+			#{endtime},
+			#{createtime}
+		)
+	</insert>
+	
+	<update id="update">
+		 UPDATE wy_questionnaire_release
+		 <trim prefix="set" suffixOverrides=",">
+			  <if test="releaseId!=null">release_id = #{releaseId},</if>
+			  <if test="questionnaireid!=null">questionnaireid = #{questionnaireid},</if>
+			  <if test="num!=null">num = #{num},</if>
+			  <if test="runstatus!=null">runstatus = #{runstatus},</if>
+			  <if test="endtime!=null">endtime = #{endtime},</if>
+			  <if test="createtime!=null">createtime = #{createtime},</if>
+		 </trim>
+		 WHERE release_id = #{releaseId}
+	</update>
+	
+	<update id="delete">
+		DELETE FROM wy_questionnaire_release
+		WHERE release_id = #{releaseId}
+	</update>
+		
+	<select id="getReleaseList" resultType="WyQuestionnaireRelease">
+		SELECT 
+			<include refid="wyQuestionnaireReleaseColumns"/>
+			,b.title AS "title"
+		FROM wy_questionnaire_release a, wy_questionnaire b
+		<include refid="wyQuestionnaireReleaseJoins"/>
+		<where>
+			a.runstatus = 1 and 
+			a.questionnaireid = b.questionnaireid 
+			and b.source = #{source}
+		</where>
+		order by createtime desc
+	</select>
+	
+	<select id="getBySourceAndGroupId" resultType="WyQuestionnaireRelease">
+		SELECT 
+			<include refid="wyQuestionnaireReleaseColumns"/>
+			,b.title AS "title"
+		FROM wy_questionnaire_release a, wy_questionnaire b
+		<include refid="wyQuestionnaireReleaseJoins"/>
+		<where>
+			a.runstatus = 1 
+			and a.questionnaireid = b.questionnaireid 
+			and b.source = #{source} 
+			and b.groupid = #{groupid}
+		</where>
+		order by createtime desc
+	</select>
+	
+</mapper>

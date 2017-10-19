@@ -1,0 +1,112 @@
+.border-bottom {
+    border-bottom: 1px solid #e2e2e2;
+}
+
+header {
+    position: relative;
+    background-size: 100% 44px;
+    min-height: 44px;
+    border-width: 0 0 1px 0;
+    background-color: #09bb07;
+    color: #fff;
+}
+
+.header-back {
+    position: absolute;
+    width: 40px;
+    height: 44px;
+    line-height: 44px;
+    font-size: 16px;
+}
+
+.header-title {
+    margin: 0 50px;
+    text-align: center;
+    height: 44px;
+    line-height: 44px;
+    font-size: 16px;
+}
+
+.clearfix tr {
+    width: 100%;
+    display: inline-block;
+}
+
+.title_tr {
+    width: 100%;
+    border-bottom: 1px solid #e2e2e2;
+    padding: 2% 0;
+}
+
+.content {
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    overflow: hidden;
+}
+
+.col-sm-1 {
+    display: inline-block;
+}
+
+.wrap {
+    color: #505050;
+}
+
+.ml10 {
+    margin-left: 10px!important;
+}
+
+body {
+    font-family: 微软雅黑, "Helvetica Neue", Helvetica, Microsoft Yahei, Hiragino Sans GB, WenQuanYi Micro Hei, sans-serif;
+    color: #323232;
+    /* background-color: #e3e2e2; */
+    max-width: 640px;
+    margin: 0 auto;
+    min-height: 100%;
+}
+
+.header-back a {
+    color: #fff;
+}
+
+.clearfix {
+    padding: 5%;
+    width: 100%;
+    font-size: 30px;
+}
+
+.background1 {
+    background: #dec0c0;
+}
+
+.background2 {
+    background: #bbd9ea;
+}
+
+.background3 {
+    background: #b3f7c8;
+}
+
+.text-center {
+    text-align: center!important;
+}
+
+.clearfix li {
+    width: 100%;
+    display: block;
+}
+ul, li {
+    list-style: none;
+}
+
+.clearfix table {
+    width: 100%;
+    display: block;
+}
+
+.sub-tab-atitle {
+    font-size: 14px;
+    line-height: 18px;
+    padding-bottom: 8px;
+    display: block;
+}

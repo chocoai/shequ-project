@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.haolinbang.modules.sns.dao.WyDianzanRecordDao">
+    
+	<sql id="wyDianzanRecordColumns">
+		a.id AS "id",
+		a.relation_id AS "relationId",
+		a.member_id AS "memberId",
+		a.dianzan_type AS "dianzanType",
+		a.biz_type AS "bizType",
+		a.create_date AS "createDate",
+		a.update_date AS "updateDate"
+	</sql>
+	
+	<sql id="wyDianzanRecordJoins">
+	</sql>
+    
+	<select id="get" resultType="WyDianzanRecord">
+		SELECT 
+			<include refid="wyDianzanRecordColumns"/>
+		FROM wy_dianzan_record a
+		<include refid="wyDianzanRecordJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="WyDianzanRecord">
+		SELECT 
+			<include refid="wyDianzanRecordColumns"/>
+		FROM wy_dianzan_record a
+		<include refid="wyDianzanRecordJoins"/>
+		<where>
+			
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="WyDianzanRecord">
+		SELECT 
+			<include refid="wyDianzanRecordColumns"/>
+		FROM wy_dianzan_record a
+		<include refid="wyDianzanRecordJoins"/>
+		<where>
+			
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO wy_dianzan_record(
+			id,
+			relation_id,
+			member_id,
+			dianzan_type,
+			biz_type,
+			create_date,
+			update_date
+		) VALUES (
+			#{id},
+			#{relationId},
+			#{memberId},
+			#{dianzanType},
+			#{bizType},
+			#{createDate},
+			#{updateDate}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE wy_dianzan_record SET 	
+			relation_id = #{relationId},
+			member_id = #{memberId},
+			dianzan_type = #{dianzanType},
+			biz_type = #{bizType},
+			update_date = #{updateDate}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="delete">
+		DELETE FROM wy_dianzan_record
+		WHERE id = #{id}
+	</update>
+	
+</mapper>

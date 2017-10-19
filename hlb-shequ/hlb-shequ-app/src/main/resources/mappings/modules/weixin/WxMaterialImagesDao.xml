@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.haolinbang.modules.weixin.dao.WxMaterialImagesDao">
+
+	<sql id="wxMaterialImagesColumns">
+		a.id AS "id",
+		a.remote_url AS "remoteUrl",
+		a.local_url AS
+		"localUrl",
+		a.type AS "type",
+		a.account_id AS "accountId",
+		a.create_date
+		AS "createDate",
+		a.update_date AS "updateDate"
+	</sql>
+
+	<sql id="wxMaterialImagesJoins">
+	</sql>
+
+	<select id="get" resultType="WxMaterialImages">
+		SELECT
+		<include refid="wxMaterialImagesColumns" />
+		FROM wx_material_images a
+		<include refid="wxMaterialImagesJoins" />
+		WHERE a.id = #{id}
+	</select>
+
+	<select id="findList" resultType="WxMaterialImages">
+		SELECT
+		<include refid="wxMaterialImagesColumns" />
+		FROM wx_material_images a
+		<include refid="wxMaterialImagesJoins" />
+		<where>
+
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+
+	<select id="findAllList" resultType="WxMaterialImages">
+		SELECT
+		<include refid="wxMaterialImagesColumns" />
+		FROM wx_material_images a
+		<include refid="wxMaterialImagesJoins" />
+		<where>
+
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+
+	<insert id="insert">
+		INSERT INTO wx_material_images(
+		remote_url,
+		local_url,
+		type,
+		account_id,
+		create_date,
+		update_date
+		) VALUES (
+		#{remoteUrl},
+		#{localUrl},
+		#{type},
+		#{accountId},
+		#{createDate},
+		#{updateDate}
+		)
+	</insert>
+
+	<update id="update">
+		UPDATE wx_material_images SET
+		remote_url = #{remoteUrl},
+		local_url = #{localUrl},
+		type = #{type},
+		account_id = #{accountId},
+		update_date = #{updateDate}
+		WHERE id = #{id}
+	</update>
+
+	<update id="delete">
+		DELETE FROM wx_material_images
+		WHERE id = #{id}
+	</update>
+
+	<select id="getWxImgUrlByLocalUrl" resultType="string">
+		SELECT
+			remote_url
+		FROM wx_material_images a
+		WHERE a.local_url = #{localUrl}
+	</select>
+
+</mapper>

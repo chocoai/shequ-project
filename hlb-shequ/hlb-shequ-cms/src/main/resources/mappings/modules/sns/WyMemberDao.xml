@@ -1,0 +1,149 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.haolinbang.modules.sns.dao.WyMemberDao">
+    
+	<sql id="wyMemberColumns">
+		a.member_id AS "memberid",
+		a.openid AS "openid",
+		a.room_id AS "roomid",
+		a.member_type AS "membertype",
+		a.parent_member_id AS "parentmemberid",
+		a.mobile AS "mobile",
+		a.sync_status AS "syncstatus",
+		a.sync_desc AS "syncdesc",
+		a.createtime AS "createtime",
+		a.member_name AS "membername",
+		a.status AS "status",
+		a.blacklist AS "blacklist",
+		a.admin_type AS "adminType",
+		a.yg_id AS "ygid",
+		a.cz_id AS "czid",
+		a.group_id AS "groupId",
+		a.appid AS "appid",
+		b.WYName AS "WYName",
+		b.LYName AS "LYName",
+		b.roomNo AS "roomNo",
+		c.member_name AS "parentMemberName"
+	</sql>
+	
+	<sql id="wyMemberJoins">
+	</sql>
+    
+	<select id="get" resultType="WyMember">
+		SELECT 
+			<include refid="wyMemberColumns"/>
+		FROM wy_member a, wy_room b, wy_member c
+		<include refid="wyMemberJoins"/>
+		WHERE a.member_id = #{memberId}
+	</select>
+	
+	<select id="findList" resultType="WyMember">
+		SELECT 
+			<include refid="wyMemberColumns"/>
+		FROM wy_member a left join wy_room b on a.room_id = b.roomId left join wy_member c on a.parent_member_id = c.member_id
+		<include refid="wyMemberJoins"/>
+		<where>
+			<if test="memberName !=null and memberName !=''">
+				AND a.member_name LIKE CONCAT('%',#{memberName},'%') 
+			</if>
+			<if test="memberType !=null and memberType !=''">
+				AND a.member_type = #{memberType}
+			</if>
+			<if test="status !=null and status !=''">
+				AND a.status = #{status}
+			</if>
+			<!-- <if test="roomid !=null and roomid !=''">
+				AND a.room_id = b.roomId
+			</if> -->
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="WyMember">
+		SELECT 
+			<include refid="wyMemberColumns"/>
+		FROM wy_member a, wy_room b, wy_member c
+		<include refid="wyMemberJoins"/>
+		<where>
+			
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO wy_member(
+			member_id,
+			openid,
+			room_id,
+			member_type,
+			parent_member_id,
+			mobile,
+			sync_status,
+			sync_desc,
+			createtime,
+			member_name,
+			status,
+			blacklist,
+			admin_type,
+			yg_id,
+			cz_id,
+			group_id
+		) VALUES (
+			#{memberid},
+			#{openid},
+			#{roomid},
+			#{membertype},
+			#{parentmemberid},
+			#{mobile},
+			#{syncstatus},
+			#{syncdesc},
+			#{createtime},
+			#{membername},
+			#{status},
+			#{blacklist},
+			#{adminType},
+			#{ygid},
+			#{czid},
+			#{groupId}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE wy_member SET 	
+			member_id = #{memberId},
+			openid = #{openid},
+			room_id = #{roomid},
+			member_type = #{memberType},
+			parent_member_id = #{parentMemberId},
+			mobile = #{mobile},
+			sync_status = #{syncStatus},
+			sync_desc = #{syncDesc},
+			createtime = #{createtime},
+			member_name = #{memberName},
+			status = #{status},
+			blacklist = #{blacklist},
+			admin_type = #{adminType},
+			yg_id = #{ygid},
+			cz_id = #{czid},
+			group_id = #{groupId}			
+		WHERE member_id = #{memberId}
+	</update>
+	
+	<update id="delete">
+		DELETE FROM wy_member
+		WHERE member_id = #{memberId}
+	</update>
+	
+</mapper>

@@ -1,0 +1,140 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.haolinbang.modules.sns.dao.WyHouseRentDao">
+    
+	<sql id="wyHouseRentColumns">
+		a.id AS "id",
+		a.member_id AS "memberId",
+		a.rental_type AS "rentalType",
+		a.title AS "title",
+		a.house_desc AS "houseDesc",
+		a.monthly_rent AS "monthlyRent",
+		a.imgs AS "imgs",
+		a.location_address AS "locationAddress",
+		a.comment_num AS "commentNum",
+		a.dianzan_num AS "dianzanNum",
+		a.longitude AS "longitude",
+		a.latitude AS "latitude",
+		a.create_date AS "createDate",
+		a.update_date AS "updateDate",
+		a.audit AS "audit"
+	</sql>
+	
+	<sql id="wyHouseRentJoins">
+	</sql>
+    
+	<select id="get" resultType="WyHouseRent">
+		SELECT 
+			<include refid="wyHouseRentColumns"/>
+		FROM wy_house_rent a
+		<include refid="wyHouseRentJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="WyHouseRent">
+		SELECT 
+			<include refid="wyHouseRentColumns"/>
+		FROM wy_house_rent a
+		<include refid="wyHouseRentJoins"/>
+		<where>			
+			<if test="title != null and title != ''">
+				AND a.title LIKE 
+					<if test="dbName == 'oracle'">'%'||#{title}||'%'</if>
+					<if test="dbName == 'mssql'">'%'+#{title}+'%'</if>
+					<if test="dbName == 'mysql'">concat('%',#{title},'%')</if>
+			</if>
+			<if test="rentalType != null and rentalType != ''">
+				AND a.rental_type = #{rentalType}
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="WyHouseRent">
+		SELECT 
+			<include refid="wyHouseRentColumns"/>
+		FROM wy_house_rent a
+		<include refid="wyHouseRentJoins"/>
+		<where>
+			
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO wy_house_rent(
+			member_id,
+			rental_type,
+			title,
+			house_desc,
+			monthly_rent,
+			imgs,
+			location_address,
+			comment_num,
+			dianzan_num,
+			longitude,
+			latitude,
+			create_date,
+			update_date,
+			audit
+		) VALUES (
+			#{memberId},
+			#{rentalType},
+			#{title},
+			#{houseDesc},
+			#{monthlyRent},
+			#{imgs},
+			#{locationAddress},
+			#{commentNum},
+			#{dianzanNum},
+			#{longitude},
+			#{latitude},
+			#{createDate},
+			#{updateDate},
+			#{audit}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE wy_house_rent SET 	
+			member_id = #{memberId},
+			rental_type = #{rentalType},
+			title = #{title},
+			house_desc = #{houseDesc},
+			monthly_rent = #{monthlyRent},
+			imgs = #{imgs},
+			location_address = #{locationAddress},
+			comment_num = #{commentNum},
+			dianzan_num = #{dianzanNum},
+			longitude = #{longitude},
+			latitude = #{latitude},
+			update_date = #{updateDate},
+			audit = #{audit}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="delete">
+		DELETE FROM wy_house_rent
+		WHERE id = #{id}
+	</update>
+	
+	<update id="audit">
+		UPDATE wy_house_rent SET audit = 1
+		WHERE id = #{id}
+	</update>
+	
+</mapper>

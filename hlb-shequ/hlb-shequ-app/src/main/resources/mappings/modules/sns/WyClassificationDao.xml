@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.haolinbang.modules.sns.dao.WyClassificationDao">
+    
+	<sql id="wyClassificationColumns">
+		a.classificationid AS "classificationid",
+		a.classificationname AS "classificationname",
+		a.questionnaireid AS "questionnaireid",
+		a.weight AS "weight",
+		a.sortval AS "sortval",
+		a.status AS "status",
+		a.createtime AS "createtime",
+		a.updatetime AS "updatetime"
+	</sql>
+	
+	<sql id="wyClassificationJoins">
+	</sql>
+    
+	<select id="get" resultType="WyClassification">
+		SELECT 
+			<include refid="wyClassificationColumns"/>
+		FROM wy_classification a
+		<include refid="wyClassificationJoins"/>
+		WHERE a.classificationid = #{classificationid}
+	</select>
+	
+	<select id="findList" resultType="WyClassification">
+		SELECT 
+			<include refid="wyClassificationColumns"/>
+			,b.title AS "title"
+		FROM wy_classification a, wy_questionnaire b
+		<include refid="wyClassificationJoins"/>
+		<where>
+			a.questionnaireid = b.questionnaireid 
+			and 
+			a.questionnaireid = #{questionnaireid}
+		</where>
+		ORDER BY a.sortval
+		<!-- <choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose> -->
+	</select>
+	
+	<select id="findAllList" resultType="WyClassification">
+		SELECT 
+			<include refid="wyClassificationColumns"/>
+		FROM wy_classification a
+		<include refid="wyClassificationJoins"/>
+		<where>
+			
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert" useGeneratedKeys="true" keyProperty="classificationid">
+		INSERT INTO wy_classification(
+			classificationname,
+			questionnaireid,
+			weight,
+			sortval,
+			status,
+			createtime,
+			updatetime
+		) VALUES (
+			#{classificationname},
+			#{questionnaireid},
+			#{weight},
+			#{sortval},
+			#{status},
+			#{createtime},
+			#{updatetime}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE wy_classification SET 	
+			classificationid = #{classificationid},
+			classificationname = #{classificationname},
+			questionnaireid = #{questionnaireid},
+			weight = #{weight},
+			sortval = #{sortval},
+			status = #{status},
+			createtime = #{createtime},
+			updatetime = #{updatetime}
+		WHERE classificationid = #{classificationid}
+	</update>
+	
+	<update id="delete">
+		DELETE FROM wy_classification
+		WHERE classificationid = #{classificationid}
+	</update>
+	
+	<select id="getbyquestionnaireid" resultType="WyClassification">
+		SELECT 
+			<include refid="wyClassificationColumns"/>
+		FROM wy_classification a
+		<include refid="wyClassificationJoins"/>
+		WHERE a.questionnaireid = #{questionnaireid}
+	</select>
+	
+	<select id="getWeight" resultType="java.lang.Double">
+		SELECT sum(weight) 
+		FROM wy_classification a
+		<include refid="wyClassificationJoins"/>
+		WHERE a.questionnaireid = #{questionnaireid}
+	</select>
+	
+</mapper>

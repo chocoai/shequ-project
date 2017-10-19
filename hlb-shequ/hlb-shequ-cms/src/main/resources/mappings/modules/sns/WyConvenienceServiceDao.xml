@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.haolinbang.modules.sns.dao.WyConvenienceServiceDao">
+    
+	<sql id="wyConvenienceServiceColumns">
+		a.service_id AS "serviceId",
+		a.content AS "content",
+		a.create_time AS "createTime",
+		a.source AS "source",
+		a.group_id AS "groupId"
+	</sql>
+	
+	<sql id="wyConvenienceServiceJoins">
+	</sql>
+    
+	<select id="get" resultType="WyConvenienceService">
+		SELECT 
+			<include refid="wyConvenienceServiceColumns"/>
+		FROM wy_convenience_service a
+		<include refid="wyConvenienceServiceJoins"/>
+		WHERE a.service_id = #{serviceId}
+	</select>
+	
+	<select id="findList" resultType="WyConvenienceService">
+		SELECT 
+			<include refid="wyConvenienceServiceColumns"/>
+		FROM wy_convenience_service a
+		<include refid="wyConvenienceServiceJoins"/>
+		<where>
+			
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="WyConvenienceService">
+		SELECT 
+			<include refid="wyConvenienceServiceColumns"/>
+		FROM wy_convenience_service a
+		<include refid="wyConvenienceServiceJoins"/>
+		<where>
+			
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert" useGeneratedKeys="true" keyProperty="serviceId">
+		INSERT INTO wy_convenience_service(
+			content,
+			create_time,
+			source,
+			group_id
+		) VALUES (
+			#{content},
+			#{createTime},
+			#{source},
+			#{groupId}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE wy_convenience_service SET 	
+			service_id = #{serviceId},
+			content = #{content},
+			create_time = #{createTime},
+			source = #{source},
+			group_id = #{groupId}
+		WHERE service_id = #{serviceId}
+	</update>
+	
+	<update id="delete">
+		DELETE FROM wy_convenience_service
+		WHERE service_id = #{serviceId}
+	</update>
+	
+</mapper>

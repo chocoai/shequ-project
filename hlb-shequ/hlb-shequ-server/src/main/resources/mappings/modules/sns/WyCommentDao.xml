@@ -1,0 +1,157 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.haolinbang.modules.sns.dao.WyCommentDao">
+    
+	<sql id="wyCommentColumns">
+		a.id AS "id",
+		a.biz_type AS "bizType",
+		a.relation_id AS "relationId",
+		a.publisher AS "publisher",
+		a.publisher_relation AS "publisherRelation",
+		a.be_reply AS "beReply",
+		a.comment AS "comment",
+		a.create_date AS "createDate",
+		a.update_date AS "updateDate",
+		a.audit AS "audit",
+		a.comment_id AS "commentId"
+	</sql>
+	
+	<sql id="wyCommentJoins">
+	</sql>
+    
+	<select id="get" resultType="WyComment">
+		SELECT 
+			<include refid="wyCommentColumns"/>
+		FROM wy_comment a
+		<include refid="wyCommentJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="WyComment">
+		SELECT 
+			<include refid="wyCommentColumns"/>
+		FROM wy_comment a
+		<include refid="wyCommentJoins"/>
+		<where>
+			
+			<if test="bizType != null and bizType != ''">
+				AND a.biz_type = #{bizType}
+			</if>
+			<if test="publisher != null and publisher != ''">
+				AND a.publisher = #{publisher}
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="WyComment">
+		SELECT 
+			<include refid="wyCommentColumns"/>
+		FROM wy_comment a
+		<include refid="wyCommentJoins"/>
+		<where>
+			
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert" useGeneratedKeys="true" keyProperty="id">
+		INSERT INTO wy_comment(
+			biz_type,
+			relation_id,
+			publisher,
+			publisher_relation,
+			be_reply,
+			comment,
+			create_date,
+			update_date,
+			audit,
+			comment_id
+		) VALUES (
+			#{bizType},
+			#{relationId},
+			#{publisher},
+			#{publisherRelation},
+			#{beReply},
+			#{comment},
+			#{createDate},
+			#{updateDate},
+			#{audit},
+			#{commentId}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE wy_comment SET 	
+			biz_type = #{bizType},
+			relation_id = #{relationId},
+			publisher = #{publisher},
+			publisher_relation = #{publisherRelation},
+			be_reply = #{beReply},
+			comment = #{comment},
+			update_date = #{updateDate},
+			audit = #{audit}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="delete">
+		DELETE FROM wy_comment
+		WHERE id = #{id}
+	</update>
+	
+	<select id="getByTypeAndId" resultType="WyComment">
+		SELECT 
+			<include refid="wyCommentColumns"/>
+		FROM wy_comment a
+		<where>
+		a.audit != FALSE and a.be_reply = FALSE
+		<if test="bizType!=null and bizType!=''">
+			and a.biz_type = #{bizType}
+		</if>
+		<if test="relationId!=null and relationId!=''">
+			and a.relation_id = #{relationId}
+		</if>
+		</where>
+	</select>
+	
+	<select id="getByCommentId" resultType="WyComment">
+		SELECT 
+			<include refid="wyCommentColumns"/>
+		FROM wy_comment a
+		<where>
+		a.audit != FALSE and a.be_reply = TRUE
+		<if test="commentId!=null and commentId!=''">
+			and a.comment_id = #{commentId}
+		</if>
+		</where>
+	</select>
+	
+	<select id="getAllByTypeAndId" resultType="WyComment">
+		SELECT 
+			<include refid="wyCommentColumns"/>
+		FROM wy_comment a
+		<where>
+		a.audit != FALSE
+		<if test="bizType!=null and bizType!=''">
+			and a.biz_type = #{bizType}
+		</if>
+		<if test="relationId!=null and relationId!=''">
+			and a.relation_id = #{relationId}
+		</if>
+		</where>
+	</select>
+</mapper>

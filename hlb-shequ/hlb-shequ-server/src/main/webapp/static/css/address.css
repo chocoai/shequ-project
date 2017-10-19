@@ -1,0 +1,153 @@
+.wrap {
+    color: #505050;
+}
+
+.border-bottom {
+    border-bottom: 1px solid #e2e2e2;
+}
+
+header {
+    position: relative;
+    background-size: 100% 44px;
+    min-height: 44px;
+    border-width: 0 0 1px 0;
+    background-color: #09bb07;
+    color: #fff;
+}
+
+.header-back {
+    position: absolute;
+    width: 40px;
+    height: 44px;
+    line-height: 44px;
+    font-size: 16px;
+}
+
+.ml10 {
+    margin-left: 10px!important;
+}
+
+.header-title {
+    margin: 0 50px;
+    text-align: center;
+    height: 44px;
+    line-height: 44px;
+    font-size: 16px;
+}
+
+.mAddress-item {
+    padding: 10px 15px;
+    background: #fff;
+    border-bottom: 1px solid #e2e2e2;
+}
+
+.step {
+    float: left;
+    font-size: 15px;
+    font-weight: bold;
+}
+
+.step1 {
+    float: left;
+    font-size: 15px;
+    font-weight: bold;
+    margin-left: 23px;
+}
+.order-address-con {
+    padding-top: 6px;
+}
+
+.mt8 {
+    /*margin-top: 8px!important;*/
+}
+
+.order-address-cont {
+    font-size: 14px;
+    line-height: 22px;
+    text-align: justify;
+}
+
+.select {
+    width: 20px;
+    height: 20px;
+    border: 1px solid #B5B7B8;
+    border-radius: 50%;
+    color: #ED2323;
+    font-size: 16px;
+}
+
+.mt5 {
+    margin-top: 5px!important;
+}
+
+.pull-left {
+    float: left!important;
+}
+
+.mAddress-tit {
+    line-height: 29px;
+    display: inline-block;
+    font-size: 13px;
+    margin-left: 6px;
+}
+
+.f14 {
+    font-size: 14px;
+}
+
+.mAddress-item:not(:first-child) {
+    margin-top: 10px;
+}
+
+.mAddress-item {
+    padding: 10px 15px;
+    background: #fff;
+    border-bottom: 1px solid #e2e2e2;
+}
+
+.foot {
+    height: 50px;
+}
+
+.pay-btn {
+    width: 93.75%;
+    background: #09bb07;
+    color: #fff;
+    display: inline-block;
+    border-radius: 3px;
+    height: 45px;
+    line-height: 45px;
+    text-align: center;
+    font-size: 16px;
+    position: fixed;
+    left: 0;
+    bottom: 12px;
+    margin-left: 3%;
+}
+
+a {
+    text-decoration: none;
+    color: inherit;
+}
+
+.clearfix:after {
+    content: "\200B";
+    display: block;
+    height: 0;
+    clear: both;
+}
+
+body {
+    font-family: Î¢ÈíÑÅºÚ, "Helvetica Neue", Helvetica, Microsoft Yahei, Hiragino Sans GB, WenQuanYi Micro Hei, sans-serif;
+    color: #323232;
+    background-color: #e3e2e2;
+    max-width: 640px;
+    margin: 0 auto;
+    min-height: 100%;
+}
+
+.shopCar-icon {
+    display: inline-block!important;
+    margin-top: 1px!important;
+    margin-left: 2px;
+}

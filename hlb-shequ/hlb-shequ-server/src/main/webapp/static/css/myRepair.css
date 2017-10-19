@@ -1,0 +1,113 @@
+body {margin: 0px;padding: 0px;}
+
+.mytitle{
+	position:fixed;
+	top:0px; 
+	left:0px; 
+	right:0px;
+	height: 140px;
+	background-color: #FFFFCC;
+	text-align: center;
+}
+
+.home {
+	width: 35px;
+	height: 35px;
+	margin: 18px 0 0 18px;
+	background-image: url(../image/home.jpg);
+	background-size:100%;
+	float: left;
+}
+
+.titleName {
+	height: 53px;
+    line-height: 64px;
+    font-size: 20px;
+    margin: 20px 53px 0 0;
+}
+
+.process {
+	height: 40px;
+}
+
+.process_content {
+	height: 20px;
+	color: #bdb6b6;
+}
+
+.process_symbol {
+	height: 20px;
+	color: #bdb6b6;
+}
+
+.preContent {
+	width: 98%;
+	height: 200px;
+	margin-top: 5px;
+	border: 1px solid #acf1ae;
+}
+
+.avatar {
+	width: 15%;
+	height: 200px;
+	float: left;
+}
+
+.avatarUrl {
+	width: 90%;
+	margin: 10px 5% 2px 5%;
+}
+
+.repairContent {
+	width: 85%;
+	height: 200px;
+	float: left;
+}
+
+.other {
+	margin: 10px 0 2px 0;
+}
+
+.name {
+	width: 50%;
+    float: left;
+    text-align: left;
+    margin-left: 5%;
+}
+
+.edit, .del {
+	width: 20%;
+	float: left;
+	color: #08e3e4;
+}
+
+.progress {
+	width: 100%;
+	float: left;
+	color: #f97c0e;
+}
+
+.repairTime, .content{
+	width: 95%;
+	margin: 5px 0 2px 5%;
+	text-align: left;
+	float: left;
+}
+
+.photo {
+	width: 100%;
+	margin-left: 2%;
+	float: left;
+	margin-top: 5px;
+}
+
+.repairPhoto{
+	width: 28%;
+	margin: 0 0 0 3%;
+	/*background-color: green;*/
+}
+
+.fix {
+	width: 100%;
+	height: 140px;
+}

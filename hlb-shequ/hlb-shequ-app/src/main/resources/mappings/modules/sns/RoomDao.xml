@@ -1,0 +1,156 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.haolinbang.modules.sns.dao.RoomDao">
+    
+	<sql id="roomColumns">
+		a.roomid AS "roomid",
+		a.source AS "source",
+		a.wyid AS "wyid",
+		a.htid AS "htid",
+		a.khid AS "khid",
+		a.wyno AS "wyno",
+		a.wyname AS "wyname",
+		a.lyid AS "lyid",
+		a.lyno AS "lyno",
+		a.lyname AS "lyname",
+		a.roomno AS "roomno",
+		a.terminationstatus AS "terminationstatus",
+		a.terminationdate AS "terminationdate",
+		a.memberid AS "memberid",
+		a.createtime AS "createtime",
+		a.updatetime AS "updatetime",
+		a.group_id	AS "groupId"
+	</sql>
+	
+	<sql id="roomJoins">
+	</sql>
+    
+	<select id="get" resultType="Room">
+		SELECT 
+			<include refid="roomColumns"/>
+		FROM wy_room a
+		<include refid="roomJoins"/>
+		WHERE a.roomid = #{roomid}
+	</select>
+	
+	<select id="findList" resultType="Room">
+		SELECT 
+			<include refid="roomColumns"/>
+			,b.member_name AS "membername"
+		FROM wy_room a, wy_member b
+		<include refid="roomJoins"/>
+		<where>
+			a.memberid = b.member_id 
+			<if test="roomno !=null and roomno !=''">
+				AND a.roomno like concat('%',#{roomno},'%')
+			</if>
+			<if test="lyname !=null and lyname !=''">
+				AND a.lyname like concat('%',#{lyname},'%')
+			</if>
+			<if test="wyname !=null and wyname !=''">
+				AND a.wyname like concat('%',#{wyname},'%')
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="Room">
+		SELECT 
+			<include refid="roomColumns"/>
+		FROM wy_room a
+		<include refid="roomJoins"/>
+		<where>
+			
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO wy_room(
+			roomid,
+			source,
+			wyid,
+			htid,
+			khid,
+			wyno,
+			wyname,
+			lyid,
+			lyno,
+			lyname,
+			roomno,
+			terminationstatus,
+			terminationdate,
+			memberid,
+			createtime,
+			updatetime
+		) VALUES (
+			#{roomid},
+			#{source},
+			#{wyid},
+			#{htid},
+			#{khid},
+			#{wyno},
+			#{wyname},
+			#{lyid},
+			#{lyno},
+			#{lyname},
+			#{roomno},
+			#{terminationstatus},
+			#{terminationdate},
+			#{memberid},
+			#{createtime},
+			#{updatetime}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE wy_room SET 	
+			roomid = #{roomid},
+			source = #{source},
+			wyid = #{wyid},
+			htid = #{htid},
+			khid = #{khid},
+			wyno = #{wyno},
+			wyname = #{wyname},
+			lyid = #{lyid},
+			lyno = #{lyno},
+			lyname = #{lyname},
+			roomno = #{roomno},
+			terminationstatus = #{terminationstatus},
+			terminationdate = #{terminationdate},
+			memberid = #{memberid},
+			createtime = #{createtime},
+			updatetime = #{updatetime}
+		WHERE roomid = #{roomid}
+	</update>
+	
+	<update id="delete">
+		DELETE FROM wy_room
+		WHERE roomid = #{roomid}
+	</update>
+	
+	<select id="getRoomListByGid" resultType="Room">
+		SELECT 
+			DISTINCT
+				a.source,
+				a.WYID,
+				a.WYName
+		FROM wy_room a
+		<include refid="roomJoins"/>
+		WHERE a.source = #{source}
+		AND a.group_id = #{groupId}
+	</select>
+	
+</mapper>

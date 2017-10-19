@@ -1,0 +1,137 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.haolinbang.modules.sns.dao.WyActJobDao">
+    
+	<sql id="wyActJobColumns">
+		a.id AS "id",
+		a.proc_def_id AS "procDefId",
+		a.task_id AS "taskId",
+		a.type AS "type",
+		a.job_day AS "jobDay",
+		a.job_hour AS "jobHour",
+		a.job_minute AS "jobMinute",
+		a.create_by AS "createBy.id",
+		a.create_date AS "createDate",
+		a.update_by AS "updateBy.id",
+		a.update_date AS "updateDate",
+		a.remarks AS "remarks",
+		a.del_flag AS "delFlag"
+	</sql>
+	
+	<sql id="wyActJobJoins">
+	</sql>
+    
+	<select id="get" resultType="WyActJob">
+		SELECT 
+			<include refid="wyActJobColumns"/>
+		FROM wy_act_job a
+		<include refid="wyActJobJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="WyActJob">
+		SELECT 
+			<include refid="wyActJobColumns"/>
+		FROM wy_act_job a
+		<include refid="wyActJobJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="WyActJob">
+		SELECT 
+			<include refid="wyActJobColumns"/>
+		FROM wy_act_job a
+		<include refid="wyActJobJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert" useGeneratedKeys="true" keyProperty="id">
+		INSERT INTO wy_act_job(
+			proc_def_id,
+			task_id,
+			type,
+			job_day,
+			job_hour,
+			job_minute,
+			create_by,
+			create_date,
+			update_by,
+			update_date,
+			remarks,
+			del_flag
+		) VALUES (
+			#{procDefId},
+			#{taskId},
+			#{type},
+			#{jobDay},
+			#{jobHour},
+			#{jobMinute},
+			#{createBy.id},
+			#{createDate},
+			#{updateBy.id},
+			#{updateDate},
+			#{remarks},
+			#{delFlag}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE wy_act_job SET 	
+			proc_def_id = #{procDefId},
+			task_id = #{taskId},
+			type = #{type},
+			job_day = #{jobDay},
+			job_hour = #{jobHour},
+			job_minute = #{jobMinute},
+			update_by = #{updateBy.id},
+			update_date = #{updateDate},
+			remarks = #{remarks}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="delete">
+		UPDATE wy_act_job SET 
+			del_flag = #{DEL_FLAG_DELETE}
+		WHERE id = #{id}
+	</update>
+	
+	<select id="getWyActJobByprocDefIdAndActId" resultType="WyActJob">
+		SELECT 
+			<include refid="wyActJobColumns"/>
+		FROM wy_act_job a
+		<include refid="wyActJobJoins"/>
+		WHERE a.proc_def_id = #{procDefinitionId}
+		AND a.task_id = #{activitiId}
+	</select>
+	
+	<select id="getWyActJobByProcdefidAndTaskidAndType" resultType="WyActJob">
+		SELECT 
+			<include refid="wyActJobColumns"/>
+		FROM wy_act_job a
+		<include refid="wyActJobJoins"/>
+		WHERE a.proc_def_id = #{procDefId}
+		AND a.task_id = #{taskId}
+		AND a.type = #{type}
+	</select>
+	
+</mapper>

@@ -1,0 +1,128 @@
+.title {
+    border: 1px solid #ccc;
+    border-width: 1px 0px;
+    height: 40px;
+    line-height: 40px;
+    text-align: center;
+    font-size: 20px;
+    background-color: #e6e6e6;
+}
+
+.content {
+	border: 1px solid #ccc;
+    border-width: 0 0 1px 0;
+    height: 35px;
+    line-height: 35px;
+}
+
+.name {
+	width: 25%;
+    display: block;
+    margin: 0 5% 0 5%;
+    float: left;
+}
+
+.val {
+	border-style: none;
+    height: 35px;
+    line-height: 35px;
+    width: 60%;
+    font-size: 16px;
+}
+.val6 {
+	display: block;
+	margin-left: 35%;
+}
+
+.sure {
+	border: 3px solid #ccc;
+    width: 20%;
+    height: 30px;
+    line-height: 30px;
+    font-size: 20px;
+    margin: 30px 40% 0 40%;
+    text-align: center;
+    background-color: #e8e8e8;
+}
+
+.content1 {
+	border: 1px solid #ccc;
+    border-width: 1px 0px;
+    height: 60px;
+}
+
+.content2 {
+	height: 60px;
+    width: 20%;
+    line-height: 60px;
+    float: left;
+    margin-right: 5%;
+}
+
+.content3 {
+	height: 60px;
+	float: left;
+	width: 60%;
+}
+
+.content4 {
+	height: 21px;
+    margin: 6px 0 3px 0;
+}
+
+.content5 {
+    height: 21px;
+    margin: 3px 0 6px 0;
+}
+
+.content6 {
+	color: #968d8d;
+    font-size: 17px;
+}
+
+.content7 {
+	color: #a27d7d;
+    font-size: 17px;
+    margin-left: 5%;
+}
+
+.content8 {
+	float: left;
+    width: 10%;
+    height: 30px;
+    margin: 15px 0 15px 5%;
+    background-image: url(../image/jiantou.jpg);
+    background-size: 80%;
+    background-repeat: no-repeat;
+}
+
+.content9 {
+	width: 60px;
+    height: 60px;
+    float: left;
+    margin: 20px 0 0 20%;
+    background-image: url(../image/add.png);
+    background-size: 80%;
+    background-repeat: no-repeat;
+}
+
+.content10 {
+	width: 60px;
+    height: 60px;
+    float: right;
+    margin: 20px 20% 0 0;
+    background-image: url(../image/return.jpg);
+    background-size: 80%;
+    background-repeat: no-repeat;
+}
+
+.content11 {
+	width: 80px;
+    height: 60px;
+    float: right;
+    margin: 20px 20% 0 0;
+    /* background-image: url(../image/tijiao.png); */
+    background-size: 80%;
+    background-repeat: no-repeat;
+}
+

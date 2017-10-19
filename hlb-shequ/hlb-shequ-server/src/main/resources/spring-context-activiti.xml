@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:context="http://www.springframework.org/schema/context" xsi:schemaLocation="
+		http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.0.xsd
+		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-4.0.xsd"
+	default-lazy-init="true">
+
+	<description>Activiti Configuration</description>
+	
+    <!-- 加载配置属性文件 -->
+	<context:property-placeholder ignore-unresolvable="true" location="file:${catalina.home}/myconf/config-sehqu.properties" />
+	
+	<!-- Activiti begin -->
+	<bean id="processEngineConfiguration" class="org.activiti.spring.SpringProcessEngineConfiguration">
+		<property name="dataSource" ref="ds3" />
+		<property name="transactionManager" ref="transactionManager" />
+		<property name="deploymentResources" value="classpath*:/act/deployments/**/*.bar"/>
+		<property name="databaseSchemaUpdate" value="false" />
+		<property name="jobExecutorActivate" value="true" /><!-- 开启定时器 -->
+		<property name="history" value="full" />
+		<property name="processDefinitionCacheLimit" value="10"/>
+
+        <!-- UUID作为主键生成策略 -->
+        <property name="idGenerator" ref="idGen" />
+        
+        <!-- 生成流程图的字体 -->
+        <property name="activityFontName" value="${activiti.diagram.activityFontName}"/>
+        <property name="labelFontName" value="${activiti.diagram.labelFontName}"/>
+        
+        <!-- 自定义用户权限 -->
+        <property name="customSessionFactories"> 
+            <list>
+				<bean class="com.haolinbang.modules.act.service.ext.ActUserEntityServiceFactory"/>
+				<bean class="com.haolinbang.modules.act.service.ext.ActGroupEntityServiceFactory"/>
+            </list>
+    	</property>    
+    	<property name="eventListeners">  
+	      <list>  
+	        <ref bean="globalEventListener"/>  
+	      </list>  
+	    </property>    
+	</bean>
+	
+	<bean id="globalEventListener" class="com.haolinbang.modules.act.listener.GlobalEventListener">
+	  <property name="handlers">  
+		  <map>  
+		   <entry key="TASK_CREATED" value="taskCreateListener"/>  
+		   <entry key="TASK_COMPLETED" value="taskCompleteListener"/>  
+		   <entry key="TASK_ASSIGNED" value="taskAssignedListener"/>  
+		   <entry key="TASK_TIMEOUT" value="taskTimeoutListener"/>
+		   <entry key="PROCESS_COMPLETED" value="processCompleteListener"/>  
+		   <entry key="ACTIVITY_STARTED" value="activityStartedListener"/>  
+		   <entry key="ACTIVITY_COMPLETED" value="activityCompletedListener"/>  
+		   <entry key="ACTIVITY_SIGNALED" value="activitySignaledListener"/>  
+		   <entry key="TIMER_FIRED" value="timerFiredListener"/>
+		  </map> 
+	  </property>
+	</bean>	
+	
+	<bean id="processEngine" class="org.activiti.spring.ProcessEngineFactoryBean">
+		<property name="processEngineConfiguration" ref="processEngineConfiguration" />
+	</bean>
+	
+	<bean id="repositoryService" factory-bean="processEngine" factory-method="getRepositoryService" />
+	<bean id="runtimeService" factory-bean="processEngine" factory-method="getRuntimeService" />
+	<bean id="formService" factory-bean="processEngine" factory-method="getFormService" />
+	<bean id="identityService" factory-bean="processEngine" factory-method="getIdentityService" />
+	<bean id="taskService" factory-bean="processEngine" factory-method="getTaskService" />
+	<bean id="historyService" factory-bean="processEngine" factory-method="getHistoryService" />
+	<bean id="managementService" factory-bean="processEngine" factory-method="getManagementService" />
+	<!-- Activiti end -->
+	
+</beans>

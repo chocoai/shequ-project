@@ -1,0 +1,129 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.haolinbang.modules.sns.dao.WyOptionDao">
+    
+	<sql id="wyOptionColumns">
+		a.optionid AS "optionid",
+		a.subjectid AS "subjectid",
+		a.classificationid AS "classificationid",
+		a.questionnaireid AS "questionnaireid",
+		a.content AS "content",
+		a.weight AS "weight",
+		a.sortval AS "sortval",
+		a.createtime AS "createtime",
+		a.updatetime AS "updatetime"
+	</sql>
+	
+	<sql id="wyOptionJoins">
+	</sql>
+    
+	<select id="get" resultType="WyOption">
+		SELECT 
+			<include refid="wyOptionColumns"/>
+		FROM wy_option a
+		<include refid="wyOptionJoins"/>
+		WHERE a.optionid = #{optionid}
+	</select>
+	
+	<select id="findList" resultType="WyOption">
+		SELECT 
+			<include refid="wyOptionColumns"/>
+			,b.title AS "title"
+		FROM wy_option a, wy_subject b
+		<include refid="wyOptionJoins"/>
+		<where>
+			a.subjectid = b.subjectid 
+			and 
+			a.subjectid = #{subjectid}
+		</where>
+		ORDER BY a.sortval
+		<!-- <choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose> -->
+	</select>
+	
+	<select id="findAllList" resultType="WyOption">
+		SELECT 
+			<include refid="wyOptionColumns"/>
+		FROM wy_option a
+		<include refid="wyOptionJoins"/>
+		<where>
+			
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert" useGeneratedKeys="true" keyProperty="optionid">
+		INSERT INTO wy_option(
+			subjectid,
+			classificationid,
+			questionnaireid,
+			content,
+			weight,
+			sortval,
+			createtime,
+			updatetime
+		) VALUES (
+			#{subjectid},
+			#{classificationid},
+			#{questionnaireid},
+			#{content},
+			#{weight},
+			#{sortval},
+			#{createtime},
+			#{updatetime}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE wy_option SET 	
+			optionid = #{optionid},
+			subjectid = #{subjectid},
+			classificationid = #{classificationid},
+			questionnaireid = #{questionnaireid},
+			content = #{content},
+			weight = #{weight},
+			sortval = #{sortval},
+			createtime = #{createtime},
+			updatetime = #{updatetime}
+		WHERE optionid = #{optionid}
+	</update>
+	
+	<update id="delete">
+		DELETE FROM wy_option
+		WHERE optionid = #{optionid}
+	</update>
+	
+	<select id="getbysubjectid" resultType="WyOption">
+		SELECT 
+			<include refid="wyOptionColumns"/>
+		FROM wy_option a
+		<include refid="wyOptionJoins"/>
+		WHERE a.subjectid = #{subjectid}
+	</select>
+	
+	<select id="getWeight" resultType="java.lang.Double">
+		SELECT sum(weight) 
+		FROM wy_option a
+		<include refid="wyOptionJoins"/>
+		WHERE a.subjectid = #{subjectid}
+	</select>
+	
+	<select id="getWeight1" resultType="java.lang.Double">
+		SELECT max(weight) 
+		FROM wy_option a
+		<include refid="wyOptionJoins"/>
+		WHERE a.subjectid = #{subjectid}
+	</select>
+	
+</mapper>

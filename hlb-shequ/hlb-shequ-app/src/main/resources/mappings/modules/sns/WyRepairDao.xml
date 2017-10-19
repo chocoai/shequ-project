@@ -1,0 +1,147 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.haolinbang.modules.sns.dao.WyRepairDao">
+
+	<sql id="wyRepairColumns">
+		a.id AS "id",
+		a.repairtype AS "repairtype",
+		a.applyname AS "applyname",
+		a.phone AS "phone",
+		a.content AS "content",
+		a.contentdetail	AS "contentdetail",
+		a.imgurl AS "imgurl",
+		a.appointmenttime AS "appointmenttime",
+		a.proc_ins_id,
+		a.memberid AS "memberid",
+		a.repairstatus AS "repairstatus",
+		a.createtime AS	"createtime",
+		a.updatetime AS "updatetime",
+		a.roomId AS "roomId",
+		a.group_id AS "groupId"
+	</sql>
+
+	<sql id="wyRepairJoins">
+	</sql>
+
+	<select id="get" resultType="WyRepair">
+		SELECT
+		<include refid="wyRepairColumns" />
+		,b.member_name AS "memberName"
+		FROM wy_repair a, wy_member b
+		<include refid="wyRepairJoins" />
+		WHERE a.id = #{id} and a.memberid = b.member_id
+	</select>
+
+	<select id="findList" resultType="WyRepair">
+		SELECT
+		<include refid="wyRepairColumns" />
+		,b.member_name AS "memberName"
+		FROM wy_repair a, wy_member b, wy_room c
+		<include refid="wyRepairJoins" />
+		WHERE a.memberid = b.member_id and a.roomId = c.roomId and c.source = #{source}
+		<if test="wyid !=null and wyid !=''">
+			AND c.WYID = #{wyid}
+		</if>
+		<if test="wyids !=null and wyids !=''">
+			AND c.WYID IN (${wyids})
+		</if>
+		<if test="repairtype !=null and repairtype  !=''">
+			AND a.repairtype = #{repairtype}
+		</if>
+		<if test="applyname !=null and applyname !=''">
+			AND a.applyname LIKE CONCAT('%',#{applyname},'%')
+		</if>
+		<if test="content !=null and content !=''">
+			AND a.content LIKE CONCAT('%',#{content},'%')
+		</if>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+
+	<select id="findAllList" resultType="WyRepair">
+		SELECT
+		<include refid="wyRepairColumns" />
+		FROM wy_repair a
+		<include refid="wyRepairJoins" />
+		<where>
+
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+
+	<insert id="insert">
+		INSERT INTO wy_repair(
+		id,
+		repairtype,
+		applyname,
+		phone,
+		content,
+		contentdetail,
+		imgurl,
+		appointmenttime,
+		memberid,
+		repairstatus,
+		createtime,
+		updatetime,
+		roomId,
+		group_id
+		) VALUES (
+		#{id},
+		#{repairtype},
+		#{applyname},
+		#{phone},
+		#{content},
+		#{contentdetail},
+		#{imgurl},
+		#{appointmenttime},
+		#{memberid},
+		#{repairstatus},
+		#{createtime},
+		#{updatetime},
+		#{roomId},
+		#{groupId}
+		)
+	</insert>
+
+	<update id="update">
+		UPDATE wy_repair SET
+		repairtype = #{repairtype},
+		applyname = #{applyname},
+		phone = #{phone},
+		content = #{content},
+		contentdetail = #{contentdetail},
+		imgurl = #{imgurl},
+		appointmenttime = #{appointmenttime},
+		memberid = #{memberid},
+		repairstatus = #{repairstatus},
+		createtime = #{createtime},
+		updatetime = #{updatetime},
+		roomId = #{roomId},
+		group_id =#{groupId}
+		WHERE id = #{id}
+	</update>
+
+	<update id="delete">
+		DELETE FROM wy_repair
+		WHERE id = #{id}
+	</update>
+
+	<update id="updateInsId">
+		UPDATE wy_repair SET
+		proc_ins_id = #{procInsId},		
+		updatetime = #{updatetime}
+		WHERE id = #{id}
+	</update>
+
+</mapper>

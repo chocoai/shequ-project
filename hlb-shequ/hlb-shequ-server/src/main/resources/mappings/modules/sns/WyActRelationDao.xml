@@ -1,0 +1,142 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.haolinbang.modules.sns.dao.WyActRelationDao">
+    
+	<sql id="wyActRelationColumns">
+		a.id AS "id",
+		a.proc_def_id AS "procDefId",
+		a.task_id AS "taskId",
+		a.status AS "status",
+		a.create_by AS "createBy.id",
+		a.create_date AS "createDate",
+		a.update_by AS "updateBy.id",
+		a.update_date AS "updateDate",
+		a.remarks AS "remarks",
+		a.del_flag AS "delFlag"
+	</sql>
+	
+	<sql id="wyActRelationJoins">
+	</sql>
+    
+	<select id="get" resultType="WyActRelation">
+		SELECT 
+			<include refid="wyActRelationColumns"/>
+		FROM wy_act_relation a
+		<include refid="wyActRelationJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="WyActRelation">
+		SELECT 
+			<include refid="wyActRelationColumns"/>
+		FROM wy_act_relation a
+		<include refid="wyActRelationJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="WyActRelation">
+		SELECT 
+			<include refid="wyActRelationColumns"/>
+		FROM wy_act_relation a
+		<include refid="wyActRelationJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO wy_act_relation(
+			proc_def_id,
+			task_id,
+			status,
+			create_by,
+			create_date,
+			update_by,
+			update_date,
+			remarks,
+			del_flag
+		) VALUES (
+			#{procDefId},
+			#{taskId},
+			#{status},
+			#{createBy.id},
+			#{createDate},
+			#{updateBy.id},
+			#{updateDate},
+			#{remarks},
+			#{delFlag}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE wy_act_relation SET 	
+			proc_def_id = #{procDefId},
+			task_id = #{taskId},
+			status = #{status},
+			update_by = #{updateBy.id},
+			update_date = #{updateDate},
+			remarks = #{remarks}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="delete">
+		UPDATE wy_act_relation SET 
+			del_flag = #{DEL_FLAG_DELETE}
+		WHERE id = #{id}
+	</update>
+	
+	
+	<select id="getRelationCandidate" resultMap="relationCandidateMap">
+		SELECT 
+				re.id 							re_id,
+				re.proc_def_id			re_proc_def_id,
+				re.task_id					re_task_id,
+				re.`status`					re_status,
+				ca.id								ca_id,
+				ca.relation_id			ca_relation_id,
+				ca.candidate				ca_candidate,
+				ca.candidate_type		ca_candidate_type
+		FROM
+				wy_act_relation re,
+				wy_act_candidate ca
+		WHERE
+				re.id = ca.relation_id
+		AND		re.proc_def_id = #{defid} 
+		AND		re.task_id = #{defKey}
+	</select>
+	
+	
+	<resultMap type="WyActRelation" id="relationCandidateMap">
+        <id property="id" column="re_id"/>
+        <result property="procDefId" column="re_proc_def_id"/>
+        <result property="taskId" column="re_task_id"/>
+        <result property="status" column="re_status"/>
+        <collection property="wyActCandidates" ofType="WyActCandidate">
+            <id property="id" column="ca_id"/>
+            <result property="relationId" column="ca_relation_id"/>
+            <result property="candidate" column="ca_candidate"/>
+            <result property="candidateType" column="ca_candidate_type"/>
+        </collection>
+    </resultMap>
+	
+	
+	
+</mapper>

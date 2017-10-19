@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.haolinbang.modules.sns.dao.WyOrgStaffDao">
+    
+	<sql id="wyOrgStaffColumns">
+		a.staff_id AS "staffId",
+		a.group_id AS "groupId",
+		a.staff_no AS "staffNo",
+		a.staff_name AS "staffName",
+		a.job AS "job",
+		a.leave AS "leave",
+		a.leave_date AS "leaveDate"
+	</sql>
+	
+	<sql id="wyOrgStaffJoins">
+	</sql>
+    
+	<select id="get" resultType="WyOrgStaff">
+		SELECT 
+			<include refid="wyOrgStaffColumns"/>
+		FROM wy_org_staff a
+		<include refid="wyOrgStaffJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="WyOrgStaff">
+		SELECT 
+			<include refid="wyOrgStaffColumns"/>
+		FROM wy_org_staff a
+		<include refid="wyOrgStaffJoins"/>
+		<where>
+			
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="WyOrgStaff">
+		SELECT 
+			<include refid="wyOrgStaffColumns"/>
+		FROM wy_org_staff a
+		<include refid="wyOrgStaffJoins"/>
+		<where>
+			
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO wy_org_staff(
+			staff_id,
+			group_id,
+			staff_no,
+			staff_name,
+			job,
+			leave,
+			leave_date
+		) VALUES (
+			#{staffId},
+			#{groupId},
+			#{staffNo},
+			#{staffName},
+			#{job},
+			#{leave},
+			#{leaveDate}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE wy_org_staff SET 	
+			staff_id = #{staffId},
+			group_id = #{groupId},
+			staff_no = #{staffNo},
+			staff_name = #{staffName},
+			job = #{job},
+			leave = #{leave},
+			leave_date = #{leaveDate}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="delete">
+		DELETE FROM wy_org_staff
+		WHERE id = #{id}
+	</update>
+	
+	
+	<select id="getWyOrgStaffByGroupId" resultType="WyOrgStaff">
+		SELECT 
+			<include refid="wyOrgStaffColumns"/>
+		FROM wy_org_staff a
+		<include refid="wyOrgStaffJoins"/>
+		WHERE a.group_id = #{groupId}
+	</select>
+
+	
+</mapper>

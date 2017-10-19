@@ -1,0 +1,152 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.haolinbang.modules.weixin.dao.WxMassMsgCommonDao">
+    
+	<sql id="wxMassMsgCommonColumns">
+		a.id AS "id",
+		a.tpl_id AS "tplId",
+		a.name AS "name",
+		a.first_value AS "firstValue",
+		a.keyword1_value AS "keyword1Value",
+		a.keyword2_value AS "keyword2Value",
+		a.keyword3_value AS "keyword3Value",
+		a.keyword4_value AS "keyword4Value",
+		a.keyword5_value AS "keyword5Value",
+		a.remark_value AS "remarkValue",
+		a.url AS "url",
+		a.create_by AS "createBy.id",
+		a.create_date AS "createDate",
+		a.update_by AS "updateBy.id",
+		a.update_date AS "updateDate",
+		a.remarks AS "remarks",
+		a.del_flag AS "delFlag",
+		a.msg_detail_id AS "msgDetailId"
+	</sql>
+	
+	<sql id="wxMassMsgCommonJoins">
+	</sql>
+    
+	<select id="get" resultType="WxMassMsgCommon">
+		SELECT 
+			<include refid="wxMassMsgCommonColumns"/>
+		FROM wx_mass_msg_common a
+		<include refid="wxMassMsgCommonJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="WxMassMsgCommon">
+		SELECT 
+			<include refid="wxMassMsgCommonColumns"/>
+		FROM wx_mass_msg_common a
+		<include refid="wxMassMsgCommonJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+			<if test="name != null and name != ''">
+				AND a.name LIKE 
+					<if test="dbName == 'oracle'">'%'||#{name}||'%'</if>
+					<if test="dbName == 'mssql'">'%'+#{name}+'%'</if>
+					<if test="dbName == 'mysql'">concat('%',#{name},'%')</if>
+			</if>
+			<if test="firstValue != null and firstValue != ''">
+				AND a.first_value LIKE 
+					<if test="dbName == 'oracle'">'%'||#{firstValue}||'%'</if>
+					<if test="dbName == 'mssql'">'%'+#{firstValue}+'%'</if>
+					<if test="dbName == 'mysql'">concat('%',#{firstValue},'%')</if>
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="WxMassMsgCommon">
+		SELECT 
+			<include refid="wxMassMsgCommonColumns"/>
+		FROM wx_mass_msg_common a
+		<include refid="wxMassMsgCommonJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO wx_mass_msg_common(
+			id,
+			tpl_id,
+			name,
+			first_value,
+			keyword1_value,
+			keyword2_value,
+			keyword3_value,
+			keyword4_value,
+			keyword5_value,
+			remark_value,
+			url,
+			create_by,
+			create_date,
+			update_by,
+			update_date,
+			remarks,
+			del_flag,
+			msg_detail_id
+		) VALUES (
+			#{id},
+			#{tplId},
+			#{name},
+			#{firstValue},
+			#{keyword1Value},
+			#{keyword2Value},
+			#{keyword3Value},
+			#{keyword4Value},
+			#{keyword5Value},
+			#{remarkValue},
+			#{url},
+			#{createBy.id},
+			#{createDate},
+			#{updateBy.id},
+			#{updateDate},
+			#{remarks},
+			#{delFlag},
+			#{msgDetailId}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE wx_mass_msg_common SET 	
+			tpl_id = #{tplId},
+			name = #{name},
+			first_value = #{firstValue},
+			keyword1_value = #{keyword1Value},
+			keyword2_value = #{keyword2Value},
+			keyword3_value = #{keyword3Value},
+			keyword4_value = #{keyword4Value},
+			keyword5_value = #{keyword5Value},
+			remark_value = #{remarkValue},
+			url = #{url},
+			update_by = #{updateBy.id},
+			update_date = #{updateDate},
+			remarks = #{remarks},
+			msg_detail_id = #{msgDetailId}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="delete">
+		UPDATE wx_mass_msg_common SET 
+			del_flag = #{DEL_FLAG_DELETE}
+		WHERE id = #{id}
+	</update>
+	
+</mapper>

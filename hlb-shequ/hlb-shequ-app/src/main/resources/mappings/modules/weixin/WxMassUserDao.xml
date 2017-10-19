@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.haolinbang.modules.weixin.dao.WxMassUserDao">
+    
+	<sql id="wxMassUserColumns">
+		a.id AS "id",
+		a.openid AS "openid",
+		a.mass_msg_id AS "massMsgId"
+	</sql>
+	
+	<sql id="wxMassUserJoins">
+	</sql>
+    
+	<select id="get" resultType="WxMassUser">
+		SELECT 
+			<include refid="wxMassUserColumns"/>
+		FROM wx_mass_user a
+		<include refid="wxMassUserJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="WxMassUser">
+		SELECT 
+			<include refid="wxMassUserColumns"/>
+		FROM wx_mass_user a
+		<include refid="wxMassUserJoins"/>
+		<where>
+			
+			<if test="openid != null and openid != ''">
+				AND a.openid = #{openid}
+			</if>
+			<if test="massMsgId != null and massMsgId != ''">
+				AND a.mass_msg_id = #{massMsgId}
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="WxMassUser">
+		SELECT 
+			<include refid="wxMassUserColumns"/>
+		FROM wx_mass_user a
+		<include refid="wxMassUserJoins"/>
+		<where>
+			
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO wx_mass_user(
+			id,
+			openid,
+			mass_msg_id
+		) VALUES (
+			#{id},
+			#{openid},
+			#{massMsgId}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE wx_mass_user SET 	
+			openid = #{openid},
+			mass_msg_id = #{massMsgId}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="delete">
+		DELETE FROM wx_mass_user
+		WHERE id = #{id}
+	</update>
+	
+</mapper>

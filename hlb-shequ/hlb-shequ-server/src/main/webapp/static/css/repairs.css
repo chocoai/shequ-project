@@ -1,0 +1,189 @@
+div {
+	margin-bottom: 0px
+}
+
+.info {
+	margin: 15px 0 0 0;
+	height: 140px;
+}
+
+.border {
+	margin: 30px 3% 0 3%;
+	border-bottom: 1px;
+	border-style: dotted;
+	border-color: #e0cece;
+}
+
+.title {
+	height: 34%;
+}
+
+.username,.mobile,.address {
+	height: 22%;
+}
+
+.titlename {
+	font-size: 24px;
+	line-height: 47.2px;
+	color: #f36b18;
+}
+
+.infolist {
+	line-height: 30.8px;
+	margin-left: 5%;
+}
+
+.title {
+	text-align: center;
+}
+
+.content1 {
+	margin: 5px 0 0 0;
+	height: 360px;
+}
+
+.area,.repairsname,.phone,.repairscontent,.ordertime {
+	height: 10%;
+	line-height: 30px;
+	margin: 0 5% 0 5%;
+}
+
+.area {
+	text-align: center;
+}
+
+.area span {
+	margin-right: 5px;
+}
+
+/*.repairsname span, .phone span, .repairscontent span, .ordertime span{
+	margin-right: 5px;
+}*/
+.repairsname input,.phone input,.repairscontent input,.ordertime input {
+	width: 70%;
+	height: 85%;
+}
+
+.repairsname div,.phone div,.repairscontent div,.pretime,.detail div,.photo .camera
+	{
+	float: left;
+	margin-right: 5px;
+	line-height: 20px;
+	width: 25%;
+}
+
+.detail {
+	height: 24%;
+	line-height: 72px;
+	margin: 0 5% 0 5%;
+}
+
+.detail span {
+	margin-right: 5px;
+	vertical-align: top;
+}
+
+.detail textarea {
+	width: 70%;
+	height: 125%;
+	font-size: 14;
+	font: initial;
+	vertical-align: middle;
+}
+
+.photo {
+	height: 26%;
+	line-height: 78px;
+	margin: 0 5% 0 5%;
+	margin-top: 28.8px;
+}
+
+.picture .img {
+	width: 21%;
+	height: 70px;
+	margin: 2px 1% 1px 0%;
+	float: left;
+}
+
+.camera .img {
+	width: 50px;
+	height: 40px;
+	margin: 2px 1% 1px 1%;
+	float: left;
+}
+
+.picture .img,.picture .del {
+	display: none;
+}
+
+.img0 {
+	width: 45%;
+}
+
+.submit {
+	height: 120px;
+}
+
+.submit1 {
+	width: 23%;
+	/*background-color: yellow;*/
+	margin: 15px 17% 0 17%;
+	float: left;
+}
+
+.submit2 {
+	width: 23%;
+	/*background-color: yellow;*/
+	margin: 15px 17% 0 0;
+	float: left;
+}
+
+/*.submit21 {
+	width: 14%;
+	background-color: yellow;
+	margin: 15px 14% 0 12%;
+}*/
+
+.submit22 {
+	margin: 22px 9%;
+	float: left;
+}
+
+.picturedata {
+	display: none;
+}
+
+.del1 {
+	position: absolute;
+	top: 360px;
+	right: 50%;
+	width: 15px;
+	height: 15px;
+}
+
+.del2 {
+	position: absolute;
+	top: 360px;
+	right: 30%;
+	width: 15px;
+	height: 15px;
+}
+
+.del3 {
+	position: absolute;
+	top: 360px;
+	right: 10%;
+	width: 15px;
+	height: 15px;
+}
+
+.weui_input1 {
+    width: 100%;
+    outline: 0;
+    background: #FFF;
+    -webkit-appearance: none;
+    font-size: inherit;
+    color: inherit;
+    height: 1.41176471em;
+    line-height: 1.41176471;
+}

@@ -1,0 +1,35 @@
+EeWPWMNr9mhpFA" elementId="org.eclipse.ui.views.PropertySheet" toBeRendered="false" ref="_oJ1xza4qEeWPWMNr9mhpFA"/>
+              <children xsi:type="advanced:Placeholder" xmi:id="_oJ1wNq4qEeWPWMNr9mhpFA" elementId="org.eclipse.datatools.sqltools.result.resultView" toBeRendered="false" ref="_oJ1yBa4qEeWPWMNr9mhpFA"/>
+              <children xsi:type="advanced:Placeholder" xmi:id="_oJ1wN64qEeWPWMNr9mhpFA" elementId="org.eclipse.jdt.debug.ui.DisplayView" toBeRendered="false" ref="_oJ1yBq4qEeWPWMNr9mhpFA"/>
+              <children xsi:type="advanced:Placeholder" xmi:id="_oJ1wOK4qEeWPWMNr9mhpFA" elementId="org.eclipse.search.SearchResultView" toBeRendered="false" ref="_oJ1yCK4qEeWPWMNr9mhpFA"/>
+            </children>
+          </children>
+        </children>
+      </children>
+      <children xsi:type="basic:PartStack" xmi:id="_oJ1wOa4qEeWPWMNr9mhpFA" elementId="stickyFolderRight" toBeRendered="false" containerData="2500">
+        <children xsi:type="advanced:Placeholder" xmi:id="_oJ1wOq4qEeWPWMNr9mhpFA" elementId="org.eclipse.help.ui.HelpView" toBeRendered="false" ref="_oJ1xU64qEeWPWMNr9mhpFA"/>
+        <children xsi:type="advanced:Placeholder" xmi:id="_oJ1wO64qEeWPWMNr9mhpFA" elementId="org.eclipse.ui.internal.introview" toBeRendered="false" ref="_oJ1xVK4qEeWPWMNr9mhpFA"/>
+        <children xsi:type="advanced:Placeholder" xmi:id="_oJ1wPK4qEeWPWMNr9mhpFA" elementId="org.eclipse.ui.cheatsheets.views.CheatSheetView" toBeRendered="false" ref="_oJ1xV64qEeWPWMNr9mhpFA"/>
+      </children>
+    </children>
+    <sharedElements xsi:type="basic:Part" xmi:id="_oJ1xU64qEeWPWMNr9mhpFA" elementId="org.eclipse.help.ui.HelpView" contributionURI="bundleclass://org.eclipse.ui.workbench/org.eclipse.ui.internal.e4.compatibility.CompatibilityView" label="Help" iconURI="platform:/plugin/org.eclipse.help.ui/icons/view16/help_view.gif" closeable="true">
+      <tags>View</tags>
+      <tags>categoryTag:Help</tags>
+    </sharedElements>
+    <sharedElements xsi:type="basic:Part" xmi:id="_oJ1xVK4qEeWPWMNr9mhpFA" elementId="org.eclipse.ui.internal.introview" contributionURI="bundleclass://org.eclipse.ui.workbench/org.eclipse.ui.internal.e4.compatibility.CompatibilityView" label="Welcome" iconURI="platform:/plugin/org.eclipse.ui/icons/full/eview16/defaultview_misc.gif" tooltip="" closeable="true">
+      <persistedState key="memento" value="&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?>&#xD;&#xA;&lt;view>&#xD;&#xA;&lt;presentation currentPage=&quot;root&quot; restore=&quot;true&quot;/>&#xD;&#xA;&lt;standbyPart/>&#xD;&#xA;&lt;/view>"/>
+      <tags>View</tags>
+      <tags>categoryTag:General</tags>
+      <tags>activeOnClose</tags>
+      <menus xmi:id="_oJ1xVa4qEeWPWMNr9mhpFA" elementId="org.eclipse.ui.internal.introview">
+        <tags>ViewMenu</tags>
+        <tags>menuContribution:menu</tags>
+      </menus>
+      <toolbar xmi:id="_oJ1xVq4qEeWPWMNr9mhpFA" elementId="org.eclipse.ui.internal.introview" visible="false"/>
+    </sharedElements>
+    <sharedElements xsi:type="basic:Part" xmi:id="_oJ1xV64qEeWPWMNr9mhpFA" elementId="org.eclipse.ui.cheatsheets.views.CheatSheetView" contributionURI="bundleclass://org.eclipse.ui.workbench/org.eclipse.ui.internal.e4.compatibility.CompatibilityView" label="Cheat Sheets" iconURI="platform:/plugin/org.eclipse.ui.cheatsheets/icons/view16/cheatsheet_view.gif" closeable="true">
+      <tags>View</tags>
+      <tags>categoryTag:Help</tags>
+    </sharedElements>
+    <sharedElements xsi:type="advanced:Area" xmi:id="_oJ1xWK4qEeWPWMNr9mhpFA" elementId="org.eclipse.ui.editorss" selectedElement="_oJ1xWa4qEeWPWMNr9mhpFA">
+      <children xsi:type="basic:PartStack" x

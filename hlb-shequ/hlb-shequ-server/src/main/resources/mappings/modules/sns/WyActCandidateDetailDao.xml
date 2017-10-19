@@ -1,0 +1,132 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.haolinbang.modules.sns.dao.WyActCandidateDetailDao">
+    
+	<sql id="wyActCandidateDetailColumns">
+		a.id AS "id",
+		a.act_candidate_id AS "actCandidateId",
+		a.candidate AS "candidate",
+		a.candidate_type AS "candidateType",
+		a.create_date AS "createDate",
+		a.update_date AS "updateDate",
+		a.del_flag AS "delFlag"
+	</sql>
+	
+	<sql id="wyActCandidateDetailJoins">
+	</sql>
+    
+	<select id="get" resultType="WyActCandidateDetail">
+		SELECT 
+			<include refid="wyActCandidateDetailColumns"/>
+		FROM wy_act_candidate_detail a
+		<include refid="wyActCandidateDetailJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="WyActCandidateDetail">
+		SELECT 
+			<include refid="wyActCandidateDetailColumns"/>
+		FROM wy_act_candidate_detail a
+		<include refid="wyActCandidateDetailJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="WyActCandidateDetail">
+		SELECT 
+			<include refid="wyActCandidateDetailColumns"/>
+		FROM wy_act_candidate_detail a
+		<include refid="wyActCandidateDetailJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO wy_act_candidate_detail(
+			id,
+			act_candidate_id,
+			candidate,
+			candidate_type,
+			create_date,
+			update_date,
+			del_flag
+		) VALUES (
+			#{id},
+			#{actCandidateId},
+			#{candidate},
+			#{candidateType},
+			#{createDate},
+			#{updateDate},
+			#{delFlag}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE wy_act_candidate_detail SET 	
+			act_candidate_id = #{actCandidateId},
+			candidate = #{candidate},
+			candidate_type = #{candidateType},
+			update_date = #{updateDate}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="delete">
+		UPDATE wy_act_candidate_detail SET 
+			del_flag = #{DEL_FLAG_DELETE}
+		WHERE id = #{id}
+	</update>
+	
+	
+	<select id="getWyActCandidateDetailByRelationIdAndType" resultType="WyActCandidateDetail">
+		SELECT 
+			<include refid="wyActCandidateDetailColumns"/>
+		FROM wy_act_candidate_detail a
+		<include refid="wyActCandidateDetailJoins"/>
+		WHERE a.act_candidate_id = #{relationId}
+		AND a.candidate_type = #{type}
+	</select>
+	
+	<update id="deleteWyActCandidateDetailByRelationId">
+		DELETE FROM wy_act_candidate_detail WHERE act_candidate_id = #{relationId}
+	</update>
+	
+	<insert id="saveList">
+		INSERT INTO wy_act_candidate_detail(
+			act_candidate_id,
+			candidate,
+			candidate_type,
+			create_date,
+			update_date,
+			del_flag
+		) 
+		<foreach collection="list" item="detail" separator=" union all ">
+			SELECT 
+					#{detail.actCandidateId},
+					#{detail.candidate},
+					#{detail.candidateType},
+					#{detail.createDate},
+					#{detail.updateDate},
+					#{detail.delFlag}					
+			FROM dual
+		</foreach>
+	</insert>
+	
+</mapper>

@@ -1,0 +1,143 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.haolinbang.modules.weixin.dao.WxNewsArticleDao">
+    
+	<sql id="wxNewsArticleColumns">
+		a.id AS "id",
+		a.thumb_media_id AS "thumbMediaId",
+		a.author AS "author",
+		a.title AS "title",
+		a.content_source_url AS "contentSourceUrl",
+		a.content AS "content",
+		a.digest AS "digest",
+		a.show_cover_pic AS "showCoverPic",
+		a.account_id AS "accountId",
+		a.create_by AS "createBy.id",
+		a.create_date AS "createDate",
+		a.update_by AS "updateBy.id",
+		a.update_date AS "updateDate",
+		a.remarks AS "remarks",
+		a.del_flag AS "delFlag",
+		img_local_url AS "imgLocalUrl"
+	</sql>
+	
+	<sql id="wxNewsArticleJoins">
+	</sql>
+    
+	<select id="get" resultType="WxNewsArticle">
+		SELECT 
+			<include refid="wxNewsArticleColumns"/>
+		FROM wx_news_article a
+		<include refid="wxNewsArticleJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="WxNewsArticle">
+		SELECT 
+			<include refid="wxNewsArticleColumns"/>
+		FROM wx_news_article a
+		<include refid="wxNewsArticleJoins"/>
+		<where>
+			<if test="accountId !=null and accountId !=''">
+				account_id = #{accountId}
+			</if>
+			<if test="accountIds !=null and accountIds !=''">
+				AND a.account_id IN(${accountIds}) 
+			</if>
+			<if test="title !=null and title !=''">
+				AND a.title LIKE CONCAT('%',#{title},'%')
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="WxNewsArticle">
+		SELECT 
+			<include refid="wxNewsArticleColumns"/>
+		FROM wx_news_article a
+		<include refid="wxNewsArticleJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO wx_news_article(
+			thumb_media_id,
+			author,
+			title,
+			content_source_url,
+			content,
+			digest,
+			show_cover_pic,
+			account_id,
+			create_by,
+			create_date,
+			update_by,
+			update_date,
+			remarks,
+			del_flag,
+			img_local_url
+		) VALUES (
+			#{thumbMediaId},
+			#{author},
+			#{title},
+			#{contentSourceUrl},
+			#{content},
+			#{digest},
+			#{showCoverPic},
+			#{accountId},
+			#{createBy.id},
+			#{createDate},
+			#{updateBy.id},
+			#{updateDate},
+			#{remarks},
+			#{delFlag},
+			#{imgLocalUrl}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE wx_news_article SET 	
+			thumb_media_id = #{thumbMediaId},
+			author = #{author},
+			title = #{title},
+			content_source_url = #{contentSourceUrl},
+			content = #{content},
+			digest = #{digest},
+			show_cover_pic = #{showCoverPic},
+			account_id = #{accountId},
+			update_by = #{updateBy.id},
+			update_date = #{updateDate},
+			remarks = #{remarks},
+			img_local_url = #{imgLocalUrl}
+		WHERE id = #{id}
+	</update>
+	
+	<!-- <update id="delete">
+		UPDATE wx_news_article SET 
+			del_flag = #{DEL_FLAG_DELETE}
+		WHERE id = #{id}
+	</update> -->
+	
+	<update id="delete">
+		DELETE FROM wx_news_article 
+		WHERE id = #{id}
+	</update>
+	
+</mapper>

@@ -1,0 +1,163 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.haolinbang.modules.weixin.dao.WxNewsDao">
+    
+	<sql id="wxNewsColumns">
+		a.id AS "id",
+		a.account_id AS "account.id",
+		a.keyword AS "keyword",
+		a.precisions AS "precisions",
+		a.title AS "title",
+		a.description AS "description",
+		a.content AS "content",
+		a.picurl AS "picurl",
+		a.is_showpic AS "isShowpic",
+		a.url AS "url",
+		a.click AS "click",
+		a.writer AS "writer",
+		a.create_by AS "createBy.id",
+		a.create_date AS "createDate",
+		a.update_by AS "updateBy.id",
+		a.update_date AS "updateDate",
+		a.remarks AS "remarks",
+		a.del_flag AS "delFlag"
+	</sql>
+	
+	<sql id="wxNewsJoins">
+	</sql>
+    
+	<select id="get" resultType="WxNews">
+		SELECT 
+			<include refid="wxNewsColumns"/>
+		FROM wx_news a
+		<include refid="wxNewsJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="WxNews">
+		SELECT 
+			<include refid="wxNewsColumns"/>
+		FROM wx_news a
+		<include refid="wxNewsJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+			<if test="account !=null and account.id !=null and account.id !=''">
+				AND a.account_id = #{account.id}
+			</if>
+			<if test="keyword != null and keyword != ''">
+				AND a.keyword LIKE 
+					<if test="dbName == 'oracle'">'%'||#{keyword}||'%'</if>
+					<if test="dbName == 'mssql'">'%'+#{keyword}+'%'</if>
+					<if test="dbName == 'mysql'">concat('%',#{keyword},'%')</if>
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="WxNews">
+		SELECT 
+			<include refid="wxNewsColumns"/>
+		FROM wx_news a
+		<include refid="wxNewsJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+			<if test="account !=null and account.id !=null and account.id !=''">
+				AND a.account_id = #{account.id}
+			</if>
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO wx_news(
+			id,
+			account_id,
+			keyword,
+			precisions,
+			title,
+			description,
+			content,
+			picurl,
+			url,
+			writer,
+			create_by,
+			create_date,
+			update_by,
+			update_date,
+			remarks,
+			del_flag
+		) VALUES (
+			#{id},
+			#{account.id},
+			#{keyword},
+			#{precisions},
+			#{title},
+			#{description},
+			#{content},
+			#{picurl},
+			#{url},
+			#{writer},
+			#{createBy.id},
+			#{createDate},
+			#{updateBy.id},
+			#{updateDate},
+			#{remarks},
+			#{delFlag}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE wx_news SET 	
+			account_id = #{account.id},
+			keyword = #{keyword},
+			precisions = #{precisions},
+			title = #{title},
+			description = #{description},
+			content = #{content},
+			picurl = #{picurl},
+			is_showpic = #{isShowpic},
+			url = #{url},
+			writer = #{writer},
+			update_by = #{updateBy.id},
+			update_date = #{updateDate},
+			remarks = #{remarks}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="delete">
+		UPDATE wx_news SET 
+			del_flag = #{DEL_FLAG_DELETE}
+		WHERE id = #{id}
+	</update>
+	
+	<select id="queryMutilNews" resultType="WxNews">
+		SELECT 
+			<include refid="wxNewsColumns"/>
+		FROM wx_news a
+		<include refid="wxNewsJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+			<if test="account !=null and account.id !=null and account.id !=''">
+				AND a.account_id = #{account.id}
+			</if>
+			<if test="keyword !=null and keyword !=''">
+				AND a.id EXISTS (${keyword})
+			</if>
+		</where>
+	</select>
+	
+</mapper>

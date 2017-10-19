@@ -1,0 +1,133 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.haolinbang.modules.weixin.dao.WxMassMsgDao">
+    
+	<sql id="wxMassMsgColumns">
+		a.id AS "id",
+		a.name AS "name",
+		a.to_users AS "toUsers",
+		a.news_article_id AS "newsArticleId",
+		a.account_id AS "account_id",
+		a.create_by AS "createBy.id",
+		a.create_date AS "createDate",
+		a.update_by AS "updateBy.id",
+		a.update_date AS "updateDate",
+		a.remarks AS "remarks",
+		a.del_flag AS "delFlag",
+		a.msg_id AS "msgId",
+		a.send_status AS "sendStatus"
+	</sql>
+	
+	<sql id="wxMassMsgJoins">
+	</sql>
+    
+	<select id="get" resultType="WxMassMsg">
+		SELECT 
+			<include refid="wxMassMsgColumns"/>
+		FROM wx_mass_msg a
+		<include refid="wxMassMsgJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="WxMassMsg">
+		SELECT 
+			<include refid="wxMassMsgColumns"/>
+		FROM wx_mass_msg a
+		<include refid="wxMassMsgJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+			<if test="name != null and name != ''">
+				AND a.name LIKE 
+					<if test="dbName == 'oracle'">'%'||#{name}||'%'</if>
+					<if test="dbName == 'mssql'">'%'+#{name}+'%'</if>
+					<if test="dbName == 'mysql'">concat('%',#{name},'%')</if>
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="WxMassMsg">
+		SELECT 
+			<include refid="wxMassMsgColumns"/>
+		FROM wx_mass_msg a
+		<include refid="wxMassMsgJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO wx_mass_msg(
+			name,
+			to_users,
+			news_article_id,
+			account_id,
+			create_by,
+			create_date,
+			update_by,
+			update_date,
+			remarks,
+			del_flag,
+			msg_id,
+			send_status
+		) VALUES (
+			#{name},
+			#{toUsers},
+			#{newsArticleId},
+			#{account_id},
+			#{createBy.id},
+			#{createDate},
+			#{updateBy.id},
+			#{updateDate},
+			#{remarks},
+			#{delFlag},
+			#{msgId},
+			#{sendStatus}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE wx_mass_msg SET 	
+			name = #{name},
+			to_users = #{toUsers},
+			news_article_id = #{newsArticleId},
+			account_id = #{account_id},
+			update_by = #{updateBy.id},
+			update_date = #{updateDate},
+			remarks = #{remarks},
+			msg_id = #{msgId},
+			send_status = #{sendStatus}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="delete">
+		UPDATE wx_mass_msg SET 
+			del_flag = #{DEL_FLAG_DELETE}
+		WHERE id = #{id}
+	</update>
+	
+	
+	<select id="getWxMassMsgByMsgid" resultType="WxMassMsg">
+		SELECT 
+			<include refid="wxMassMsgColumns"/>
+		FROM wx_mass_msg a
+		<include refid="wxMassMsgJoins"/>
+		WHERE a.msg_id = #{msgId}
+	</select>
+	
+</mapper>

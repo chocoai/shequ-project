@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.haolinbang.modules.sys.dao.HlbregisterDao">
+    
+	<sql id="hlbregisterColumns">
+		a.source AS "source",
+		a.subsystem AS "subsystem",
+		a.rootkey AS "rootkey",
+		a.mainkey AS "mainkey",
+		a.subkey AS "subkey",
+		a.`key` AS "key",
+		a.value AS "value",
+		a.regid AS "regid"
+	</sql>
+	
+	<sql id="hlbregisterJoins">
+	</sql>
+    
+	<select id="get" resultType="Hlbregister">
+		SELECT 
+			<include refid="hlbregisterColumns"/>
+		FROM hlbregister a
+		<include refid="hlbregisterJoins"/>
+		WHERE a.regid = #{regid}
+	</select>
+	
+	<select id="findList" resultType="Hlbregister">
+		SELECT 
+			<include refid="hlbregisterColumns"/>
+		FROM hlbregister a
+		<include refid="hlbregisterJoins"/>
+		<where>
+			
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="Hlbregister">
+		SELECT 
+			<include refid="hlbregisterColumns"/>
+		FROM hlbregister a
+		<include refid="hlbregisterJoins"/>
+		<where>
+			
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO hlbregister(
+			source,
+			subsystem,
+			rootkey,
+			mainkey,
+			subkey,
+			`key`,
+			value
+		) VALUES (
+			#{source},
+			#{subsystem},
+			#{rootkey},
+			#{mainkey},
+			#{subkey},
+			#{key},
+			#{value}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE hlbregister SET 	
+			source = #{source},
+			subsystem = #{subsystem},
+			rootkey = #{rootkey},
+			mainkey = #{mainkey},
+			subkey = #{subkey},
+			`key` = #{key},
+			value = #{value}
+		WHERE regid = #{regid}
+	</update>
+	
+	<update id="delete">
+		DELETE FROM hlbregister
+		WHERE regid = #{regid}
+	</update>
+	
+	<select id="getHlbregister" resultType="Hlbregister">
+		SELECT 
+			<include refid="hlbregisterColumns"/>
+		FROM hlbregister a
+		<include refid="hlbregisterJoins"/>
+		<where>
+			a.source = #{source}
+			AND a.subsystem = #{subsystem}			
+			AND a.`key` = #{key}
+			<if test="mainkey !=null and mainkey !=''">
+			AND a.mainkey = #{mainkey}			
+			</if>
+			<if test="subkey !=null and subkey !=''">
+			AND a.subkey = #{subkey}
+			</if>
+			<if test="rootkey !=null and rootkey !=''">
+			AND a.rootkey = #{rootkey}
+			</if>
+		</where>
+	</select>
+	
+</mapper>
